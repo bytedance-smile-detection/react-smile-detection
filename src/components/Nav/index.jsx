@@ -1,29 +1,51 @@
-import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, createContext } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import * as tf from "@tensorflow/tfjs";
 import { Image } from "antd-mobile";
 import "./index.css";
+import { MODEL_URL } from "../../constants.js";
 
-const Nav = () => {
-  // const [mediaStreamTrack, setMediaStreamTrack] = useState(null);
+export const ModelContext = createContext(null);
+
+const Nav = (props) => {
   const [imageIcon, setImageIcon] = useState("image-fill.png");
   const [cameraIcon, setCameraIcon] = useState("camera.png");
+  const [model, setModel] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const loadModel = async () => {
+      console.log("loading model ...");
+      const model = await tf.loadLayersModel(MODEL_URL);
+
+      setModel(model);
+    };
+
+    loadModel();
+
+    if (location.pathname === "/") {
+      setImageIcon("image-fill.png");
+      setCameraIcon("camera.png");
+    } else {
+      setImageIcon("image.png");
+      setCameraIcon("camera-fill.png");
+    }
+  }, [location]);
 
   const toStatic = () => {
     navigate("");
-    setImageIcon("image-fill.png");
-    setCameraIcon("camera.png");
   };
 
   const toDynamic = () => {
     navigate("/dynamic");
-    setImageIcon("image.png");
-    setCameraIcon("camera-fill.png");
   };
 
   return (
     <>
-      <Outlet className="content" />
+      <ModelContext.Provider value={model}>
+        <Outlet className="content" />
+      </ModelContext.Provider>
       <div className="fixed bottom-0 w-full flex justify-around bg-gray-100 nav">
         <div className="flex justify-center items-center" onClick={toStatic}>
           <Image

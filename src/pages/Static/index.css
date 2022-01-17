@@ -6,3 +6,11 @@
 .img {
   --cell-size: 200px;
 }
+
+.detect-button {
+  width: 200px;
+  height: 50px;
+  --text-color: #ffffff;
+  --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}

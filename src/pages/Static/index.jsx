@@ -1,25 +1,56 @@
-import React, { useState } from "react";
-import { ImageUploader } from "antd-mobile";
+import React, { useState, useContext, useEffect } from "react";
+// import * as tf from "@tensorflow/tfjs";
+import { ImageUploader, Button } from "antd-mobile";
 import { UploadOutline } from "antd-mobile-icons";
 import "./index.css";
+import { ModelContext } from "../../components/Nav";
+// import { WIDTH, HEIGHT } from "../../constants";
 
 const Static = () => {
-  const [fileList, setFileList] = useState([]);
+  const [imgList, setImgList] = useState([]);
+  const [url, setUrl] = useState("");
+  const model = useContext(ModelContext);
 
-  const mockUpload = (file) => {
+  useEffect(() => {
+    console.log(model);
+  }, [model]);
+
+  const mockUpload = (img) => {
+    const url = URL.createObjectURL(img);
+
+    setUrl(url);
+
     return {
-      url: URL.createObjectURL(file),
+      url,
     };
+  };
+
+  const startDetect = async () => {
+    let img = imgList[0];
+    console.log(img);
+    console.log(model.predict);
+
+    // const element = document.getElementById("img");
+
+    // let tensor = tf.browser
+    //   .fromPixels(element)
+    //   .resizeNearestNeighbor([WIDTH, HEIGHT]);
+    // tensor.shape.unshift(null);
+    // tensor.shape[3] = 1;
+    // console.log(tensor);
+
+    // const res = await model.predict(tensor).data();
+    // console.log(res);
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl text-gray-800 font-bold">图像检测</h1>
-      <div className="mt-40 text-center">
+      <div className="mt-40 flex flex-col justify-center items-center">
         <ImageUploader
-          className="img"
-          value={fileList}
-          onChange={setFileList}
+          className="img mb-4"
+          value={imgList}
+          onChange={setImgList}
           upload={mockUpload}
           maxCount={1}
         >
@@ -27,6 +58,18 @@ const Static = () => {
             <UploadOutline fontSize={48} />
           </div>
         </ImageUploader>
+        {imgList.length ? (
+          <Button className="detect-button" onClick={startDetect}>
+            开始检测
+          </Button>
+        ) : (
+          <></>
+        )}
+        {url ? (
+          <img id="img" className="w-20 mt-10 hidden" src={url} alt="img" />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

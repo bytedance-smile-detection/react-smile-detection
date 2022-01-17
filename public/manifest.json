@@ -18,14 +18,6 @@
       "sizes": "512x512"
     }
   ],
-  "permissions": {
-    "audio-capture": {
-      "description": "Required to capture audio using getUserMedia()"
-    },
-    "video-capture": {
-      "description": "Required to capture video using getUserMedia()"
-    }
-  },
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#ffffff",
