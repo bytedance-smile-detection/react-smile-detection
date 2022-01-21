@@ -25,7 +25,7 @@ const Camera = () => {
       <video
         id="camera"
         ref={cameraRef}
-        className="object-cover h-full"
+        className="object-cover h-screen"
         autoPlay
         muted
         playsInline

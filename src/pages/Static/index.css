@@ -7,7 +7,37 @@
   --cell-size: 200px;
 }
 
+.illustration {
+  width: 8rem;
+}
+
 .detect-button {
+  width: 200px;
+  height: 50px;
+  --text-color: #ffffff;
+  --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}
+
+.back-button {
+  width: 200px;
+  height: 50px;
+  margin-top: 1.5rem;
+  --text-color: #818CF8;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
+  --border-radius: 1.5rem;
+}
+
+.main-text-color {
+  color: #303133;
+}
+
+.normal-text-color {
+  color: #606266;
+}
+
+.clear-button {
   width: 200px;
   height: 50px;
   --text-color: #ffffff;
