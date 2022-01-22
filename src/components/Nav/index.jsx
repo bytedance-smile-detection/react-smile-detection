@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import { Image } from "antd-mobile";
 import "./index.css";
-import { MODEL_URL } from "../../constants.js";
+import { LENET_MODEL_URL } from "../../constants.js";
 
 export const ModelContext = createContext(null);
 
@@ -17,7 +17,7 @@ const Nav = (props) => {
   useEffect(() => {
     const loadModel = async () => {
       console.log("loading model ...");
-      const model = await tf.loadLayersModel(MODEL_URL);
+      const model = await tf.loadLayersModel(LENET_MODEL_URL);
 
       setModel(model);
     };

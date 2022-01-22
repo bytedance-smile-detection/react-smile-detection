@@ -117,11 +117,11 @@ const Static = () => {
 
         {isResultDisplay ? (
           <>
-            <div className="w-full p-6 rounded-3xl bg-gray-100">
+            <div className="w-full px-6 py-4 rounded-3xl bg-gray-100">
               {/* <h1 className="text-center mb-4 font-bold main-text-color text-xl">
                 Result
               </h1> */}
-              <div className="flex justify-between mb-4 normal-text-color text-lg">
+              <div className="flex justify-between mb-6 normal-text-color text-lg">
                 <span className="flex items-center">
                   <Image
                     className="mr-2"

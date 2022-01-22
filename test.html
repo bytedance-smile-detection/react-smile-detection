@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>视频识别人脸</title>
+  </head>
+
+  <body>
+    <div style="position: relative" class="margin">
+      <video
+        id="inputVideo"
+        style="width: 500px; margin: auto"
+        autoplay
+        muted
+      ></video>
+      <canvas id="overlay" />
+    </div>
+  </body>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="./face-pi.js"></script>
+  <script>
+    const canvas = document.getElementById("overlay");
+    const context = canvas.getContext("2d");
+    const video = document.getElementById("inputVideo");
+
+    $(function () {
+      run();
+    });
+    async function run() {
+      // load the models
+      await faceapi.loadMtcnnModel("/weights");
+      await faceapi.loadFaceRecognitionModel("/weights");
+
+      // try to access users webcam and stream the images
+      // to the video element
+
+      if (navigator.mediaDevices.getUserMedia) {
+        //最新的标准API
+        navigator.mediaDevices
+          .getUserMedia({ video: { width: 1000, height: 1000 } })
+          .then(success)
+          .catch(error);
+      } else if (navigator.webkitGetUserMedia) {
+        //webkit核心浏览器
+        navigator.webkitGetUserMedia(
+          { video: { width: 1000, height: 1000 } },
+          success,
+          error
+        );
+      } else if (navigator.mozGetUserMedia) {
+        //firfox浏览器
+        navigator.mozGetUserMedia(
+          { video: { width: 1000, height: 1000 } },
+          success,
+          error
+        );
+      } else if (navigator.getUserMedia) {
+        //旧版API
+        navigator.getUserMedia(
+          { video: { width: 1000, height: 1000 } },
+          success,
+          error
+        );
+      }
+
+      function success(stream) {
+        //兼容webkit核心浏览器
+        // let CompatibleURL = window.URL || window.webkitURL;
+
+        //将视频流设置为video元素的源
+        // console.log(stream);
+
+        //video.src = CompatibleURL.createObjectURL(stream);
+        video.srcObject = stream;
+        // video.play();
+        timer = setInterval(function () {
+          (canvas.width = video.offsetWidth),
+            (canvas.height = video.offsetHeight);
+          context.drawImage(video, 0, 0, video.offsetWidth, video.offsetHeight); //绘制视频
+          onPlay();
+        }, 100);
+      }
+      function error(error) {
+        console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);
+      }
+    }
+    const mtcnnForwardParams = {
+      //通过CNN传递的输入图像的缩放版本数
+      //在第一阶段，数字越小，推理时间越短，
+      //但也不太准确
+      maxNumScales: 10,
+      //用于计算图像比例步长的比例因子
+      //阶段1中使用的金字塔
+      scaleFactor: 0.709,
+      //用于过滤边界的得分阈值
+      //阶段1、2和3的框
+      scoreThresholds: [0.6, 0.7, 0.7],
+      //期望的最小脸部尺寸越高，处理速度越快，
+      //但不会检测到较小的面孔
+      minFaceSize: 200,
+    };
+    const displaySize = { width: 500, height: 360 };
+
+    var mtcnnResults = [];
+    //播放的时候就开始检测，识别人脸
+    async function onPlay(a) {
+      mtcnnResults = await faceapi.mtcnn(
+        document.getElementById("inputVideo"),
+        mtcnnForwardParams
+      );
+      const resizedResults = faceapi.resizeResults(mtcnnResults, displaySize);
+      faceapi.draw.drawDetections(canvas, resizedResults);
+      faceapi.draw.drawFaceLandmarks(canvas, resizedResults);
+
+      if (!mtcnnResults.length) {
+        console.log("未检测到人脸");
+      }
+    }
+  </script>
+</html>

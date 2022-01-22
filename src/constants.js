@@ -1,7 +1,8 @@
-const MODEL_URL = "http://localhost:8000/model.json";
+const LENET_MODEL_URL = "http://localhost:8000/lenet/model.json";
+const FACE_MODEL_URL = "http://localhost:8000/face/model.json";
 const WIDTH = 28;
 const HEIGHT = 28;
 const ILLUSTRATION_URL =
   "https://www.xiaoqw.online/source/smile-detection-illustration.svg";
 
-export { MODEL_URL, WIDTH, HEIGHT, ILLUSTRATION_URL };
+export { LENET_MODEL_URL, FACE_MODEL_URL, WIDTH, HEIGHT, ILLUSTRATION_URL };
