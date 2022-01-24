@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "笑容检测",
+  "name": "笑容检测",
   "icons": [
     {
       "src": "favicon.ico",

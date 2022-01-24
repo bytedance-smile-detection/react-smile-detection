@@ -8,7 +8,6 @@ import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
 
 const Camera = () => {
   const model = useContext(ModelContext);
-  const [box, setBox] = useState({});
   const [result, setResult] = useState([]);
   const cameraRef = useRef(null);
   const snapshotRef = useRef(null);
@@ -37,20 +36,9 @@ const Camera = () => {
 
     getUserMedia();
 
-    const timer = setInterval(() => {
-      getFace();
-    }, 300);
+    const timer = setInterval(getFace, 300);
 
     return () => {
-      // const stream = cameraRef.current.srcObject;
-      // const tracks = stream.getTracks();
-      // if (stream == null) {
-      //   return;
-      // }
-      // tracks.forEach(function (track) {
-      //   track.stop();
-      // });
-      // cameraRef.current.srcObject = null;
       clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,22 +50,28 @@ const Camera = () => {
       snapshotRef.current,
       tinyFaceDetector
     );
-    const box = {
-      top: face.box.top,
-      right: face.box.right,
-      bottom: face.box.bottom,
-      left: face.box.left,
-    };
+    if (face?.box) {
+      const box = {
+        top: face.box.top,
+        right: face.box.right,
+        bottom: face.box.bottom,
+        left: face.box.left,
+      };
 
-    console.log(box);
+      console.log(box);
 
-    setBox(box);
-    drawFaceCanvas();
+      await drawFaceCanvas(box);
+      detect();
+    } else {
+      console.log("未检测到人脸!");
+      setResult(null);
+    }
   };
 
   const takeSnapshot = async () => {
     snapshotRef.current.width = cameraRef.current.videoWidth;
     snapshotRef.current.height = cameraRef.current.videoHeight;
+
     await snapshotRef.current
       .getContext("2d")
       .drawImage(
@@ -89,7 +83,7 @@ const Camera = () => {
       );
   };
 
-  const drawFaceCanvas = async () => {
+  const drawFaceCanvas = async (box) => {
     faceRef.current.width = box.right - box.left;
     faceRef.current.height = box.bottom - box.top;
 
@@ -106,12 +100,10 @@ const Camera = () => {
         faceRef.current.width,
         faceRef.current.height
       );
-
-    detect();
   };
 
   const detect = async () => {
-    const element = faceRef.current;
+    let element = faceRef.current;
     let tensor = tf.browser.fromPixels(element);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
@@ -138,25 +130,37 @@ const Camera = () => {
         playsInline
       ></video>
       {/* <Button onClick={getFace}>截取视频</Button> */}
-      {result[0] < result[1] ? (
-        <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
-          <Image
-            className="mr-2"
-            src={require(`../../assets/smiling.png`)}
-            width={24}
-            height={24}
-          />
-          Smiling
-        </span>
+      {result ? (
+        result[0] < result[1] ? (
+          <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
+            <Image
+              className="mr-2"
+              src={require(`../../assets/smiling.png`)}
+              width={24}
+              height={24}
+            />
+            Smiling
+          </span>
+        ) : (
+          <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
+            <Image
+              className="mr-2"
+              src={require(`../../assets/notSmiling.png`)}
+              width={24}
+              height={24}
+            />
+            Not Smiling
+          </span>
+        )
       ) : (
         <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
           <Image
             className="mr-2"
-            src={require(`../../assets/notSmiling.png`)}
+            src={require(`../../assets/no-face.png`)}
             width={24}
             height={24}
           />
-          Not Smiling
+          No Face Detected
         </span>
       )}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
