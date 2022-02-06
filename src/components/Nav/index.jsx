@@ -5,12 +5,13 @@ import { Image } from "antd-mobile";
 import "./index.css";
 import { LENET_MODEL_URL } from "../../constants.js";
 
-export const ModelContext = createContext(null);
+export const ModelContext = createContext();
 
 const Nav = (props) => {
   const [imageIcon, setImageIcon] = useState("image-fill.png");
   const [cameraIcon, setCameraIcon] = useState("camera.png");
   const [model, setModel] = useState(null);
+  // const [loadingModel, setLoadingModel] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,8 +19,8 @@ const Nav = (props) => {
     const loadModel = async () => {
       console.log("loading model ...");
       const model = await tf.loadLayersModel(LENET_MODEL_URL);
-
       setModel(model);
+      // setLoadingModel(false);
     };
 
     loadModel();
@@ -32,6 +33,10 @@ const Nav = (props) => {
       setCameraIcon("camera-fill.png");
     }
   }, [location]);
+
+  // useEffect(() => {
+  //   if (!loadingModel) console.log(false);
+  // }, [loadingModel]);
 
   const toStatic = () => {
     navigate("");

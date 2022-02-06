@@ -131,7 +131,7 @@ const Camera = () => {
       ></video>
       {/* <Button onClick={getFace}>截取视频</Button> */}
       {result ? (
-        result[0] < result[1] ? (
+        result[1] >= 0.7 ? (
           <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
             <Image
               className="mr-2"
