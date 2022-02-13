@@ -1,14 +1,11 @@
 import React from 'react';
 import { Form, Button, Toast, Input } from "antd-mobile";
-import { connect } from 'react-redux';
-import { login, getUserInfo } from "../../store/actions";
 import { LeftOutline } from 'antd-mobile-icons'
 import { useNavigate } from "react-router-dom";
 import { reqRegist } from "../../api/login";
 import "./index.css";
 
-const Login = (props) => {
-  const { login, getUserInfo } = props;
+const Regist = (props) => {
   const navigate = useNavigate();
   const toAuth = () => {
     navigate("/auth");
@@ -44,16 +41,7 @@ const Login = (props) => {
         });
       });
   };
-  // 获取用户信息
-  const handleUserInfo = (token) => {
-    getUserInfo(token)
-      .then((data) => { })
-      .catch((error) => {
-        Toast.show({
-          content: error,
-        });
-      });
-  };
+
 
   return (
 
@@ -96,6 +84,4 @@ const Login = (props) => {
     </div>
   );
 }
-export default connect((state) => state.user, { login, getUserInfo })(
-  Login
-);
+export default Regist;

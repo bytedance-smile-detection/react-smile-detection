@@ -16,6 +16,10 @@ const router = [
         element: <Static />,
       },
       {
+        path: "/Login",
+        element: <Login />,
+      },
+      {
         path: "/dynamic",
         element: <Dynamic />,
       },

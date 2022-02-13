@@ -20,6 +20,7 @@ const Login = (props) => {
           content: "登录成功",
         });
         // handleUserInfo(data.token);
+        navigate("/userspace");
       })
       .catch((error) => {
         Toast.show({
