@@ -14,7 +14,7 @@ const Camera = () => {
   const faceRef = useRef(null);
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
-
+  let videoTracks;
   useEffect(() => {
     const getUserMedia = async () => {
       await faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL);
@@ -25,7 +25,7 @@ const Camera = () => {
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        const videoTracks = stream.getVideoTracks();
+        videoTracks = stream.getVideoTracks();
 
         cameraRef.current.srcObject = stream;
         console.log(`正在使用的设备：${videoTracks[0].label}`);
@@ -40,6 +40,7 @@ const Camera = () => {
 
     return () => {
       clearInterval(timer);
+      videoTracks[0].stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
