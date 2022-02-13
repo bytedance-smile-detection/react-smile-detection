@@ -3,7 +3,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import { Image } from "antd-mobile";
 import "./index.css";
-import { LENET_MODEL_URL } from "../../constants.js";
+import { LENET_MODEL_URL, LOGINSUCCESS } from "../../constants.js";
+import PubSub from "pubsub-js";
 
 export const ModelContext = createContext();
 
@@ -11,6 +12,7 @@ const Nav = (props) => {
   const [imageIcon, setImageIcon] = useState("image-fill.png");
   const [cameraIcon, setCameraIcon] = useState("camera.png");
   const [model, setModel] = useState(null);
+  const [login, setLogin] = useState(false)
   // const [loadingModel, setLoadingModel] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,6 +36,10 @@ const Nav = (props) => {
     }
   }, [location]);
 
+  PubSub.subscribe(LOGINSUCCESS, (msg, data) => {
+    setLogin(data)
+  })
+
   // useEffect(() => {
   //   if (!loadingModel) console.log(false);
   // }, [loadingModel]);
@@ -44,6 +50,10 @@ const Nav = (props) => {
 
   const toDynamic = () => {
     navigate("/dynamic");
+  };
+
+  const toLogin = () => {
+    navigate("/Login")
   };
 
   return (
@@ -59,7 +69,10 @@ const Nav = (props) => {
             height={28}
           />
         </div>
+        {/* 
         <div className="flex justify-center items-center" onClick={toDynamic}>
+        */}
+        <div className="flex justify-center items-center" onClick={login ? toDynamic : toLogin}>
           <Image
             src={require(`../../assets/${cameraIcon}`)}
             width={28}

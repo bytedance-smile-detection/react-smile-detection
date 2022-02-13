@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^12.8.3",
     "@vladmandic/face-api": "^1.6.4",
     "antd-mobile": "^5.0.0-rc.18",
+    "axios": "^0.25.0",
+    "pubsub-js": "^1.9.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "6",

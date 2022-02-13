@@ -8,5 +8,6 @@
     "semibold",
     "tfjs",
     "vladmandic"
-  ]
+  ],
+  "git.ignoreLimitWarning": true
 }

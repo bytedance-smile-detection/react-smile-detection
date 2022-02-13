@@ -3,6 +3,9 @@ const HEIGHT = 28;
 const ILLUSTRATION_URL =
   "https://www.xiaoqw.online/source/smile-detection-illustration.svg";
 
+
+const LOGINSUCCESS = 'loginSuccess';
+
 let env = process.env.NODE_ENV;
 let LENET_MODEL_URL = "";
 let FACE_MODEL_URL = "";
@@ -18,3 +21,4 @@ if (env === "development") {
 }
 
 export { LENET_MODEL_URL, FACE_MODEL_URL, WIDTH, HEIGHT, ILLUSTRATION_URL };
+export { LOGINSUCCESS };

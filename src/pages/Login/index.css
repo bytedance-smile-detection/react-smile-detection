@@ -1,0 +1,12 @@
+.input{
+        --color:#606266;
+        --placeholder-color:#C0C4CC
+}
+
+.page{
+        padding: 1.5rem;
+}
+
+.space{
+        --gap-vertical:15px
+}
