@@ -1,0 +1,50 @@
+
+.personalcenter-title{
+    width: auto;
+    height: 93px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 32px;
+    /* or 133% */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #303133;
+}
+.smilecontent{
+  width: 327px;
+  height: 100%;
+  margin-top: 10em;
+}
+
+.loginbutton {
+  width: 327px;
+  height: 55px;
+  position: absolute;
+  bottom: 200px;
+  --text-color: #ffffff;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
+  --border-radius: 24px;
+  --background-color: #818CF8  !important;
+}
+
+.registbutton {
+  width: 327px;
+  height: 55px;
+  margin-top: 1.5rem;
+  --text-color: #818CF8;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
+  --border-radius: 24px;
+  --background-color: #ffffff  !important;
+}
+.signbg{
+  width:100%;
+  height: 115px;
+  margin-top:1.5rem;
+  bottom: 65px;
+  background-color: #F3F4F6;
+}
