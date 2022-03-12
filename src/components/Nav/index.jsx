@@ -1,15 +1,16 @@
 import React, { useState, useEffect, createContext } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import SvgIcon from "../SvgIcon";
 import * as tf from "@tensorflow/tfjs";
-import { Image } from "antd-mobile";
 import "./index.css";
-import { LENET_MODEL_URL } from "../../constants.js";
+import { HEIGHT, LENET_MODEL_URL, WIDTH } from "../../constants.js";
 
 export const ModelContext = createContext();
 
 const Nav = (props) => {
-  const [imageIcon, setImageIcon] = useState("image-fill.png");
-  const [cameraIcon, setCameraIcon] = useState("camera.png");
+  const [imageIcon, setImageIcon] = useState("image-c");
+  const [cameraIcon, setCameraIcon] = useState("camera");
+  const [userIcon, setUserIcon] = useState("user");
   const [model, setModel] = useState(null);
   // const [loadingModel, setLoadingModel] = useState(true);
   const navigate = useNavigate();
@@ -24,13 +25,23 @@ const Nav = (props) => {
     };
 
     loadModel();
+  }, []);
 
+  useEffect(() => {
     if (location.pathname === "/") {
-      setImageIcon("image-fill.png");
-      setCameraIcon("camera.png");
-    } else {
-      setImageIcon("image.png");
-      setCameraIcon("camera-fill.png");
+      setImageIcon("image-c");
+      setCameraIcon("camera");
+      setUserIcon("user");
+    }
+    if (location.pathname === "/dynamic") {
+      setImageIcon("image");
+      setCameraIcon("camera-c");
+      setUserIcon("user");
+    }
+    if (location.pathname === "/user") {
+      setImageIcon("image");
+      setCameraIcon("camera");
+      setUserIcon("user-c");
     }
   }, [location]);
 
@@ -39,32 +50,31 @@ const Nav = (props) => {
   // }, [loadingModel]);
 
   const toStatic = () => {
-    navigate("");
+    navigate("/");
   };
 
   const toDynamic = () => {
     navigate("/dynamic");
   };
 
+  const toUser = () => {
+    navigate("/user");
+  };
+
   return (
     <>
       <ModelContext.Provider value={model}>
-        <Outlet className="content" />
+        <Outlet />
       </ModelContext.Provider>
-      <div className="fixed bottom-0 w-full flex justify-around bg-gray-100 nav">
+      <div className="nav fixed w-full flex justify-around bg-gray-100">
         <div className="flex justify-center items-center" onClick={toStatic}>
-          <Image
-            src={require(`../../assets/${imageIcon}`)}
-            width={28}
-            height={28}
-          />
+          <SvgIcon name={imageIcon} width={WIDTH} height={HEIGHT} />
         </div>
         <div className="flex justify-center items-center" onClick={toDynamic}>
-          <Image
-            src={require(`../../assets/${cameraIcon}`)}
-            width={28}
-            height={28}
-          />
+          <SvgIcon name={cameraIcon} width={WIDTH} height={HEIGHT} />
+        </div>
+        <div className="flex justify-center items-center" onClick={toUser}>
+          <SvgIcon name={userIcon} width={WIDTH} height={HEIGHT} />
         </div>
       </div>
     </>

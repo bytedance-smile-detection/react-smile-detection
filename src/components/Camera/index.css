@@ -1,3 +1,4 @@
 video {
   transform: rotateY(180deg);
+  height: calc(100vh - 4rem - env(safe-area-inset-bottom));
 }

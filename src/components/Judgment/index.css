@@ -1,0 +1,3 @@
+span {
+  bottom: calc(6rem + env(safe-area-inset-bottom));
+}

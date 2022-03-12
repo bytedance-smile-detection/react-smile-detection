@@ -44,3 +44,7 @@
   --background-color: #818CF8;
   --border-radius: 1.5rem;
 }
+
+.illustration {
+  bottom: calc(7rem + env(safe-area-inset-bottom));
+}

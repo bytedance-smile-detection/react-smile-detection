@@ -1,0 +1,35 @@
+.title {
+  color: #303133;
+}
+
+.form {
+  --border-inner: 0;
+  --border-top: 0;
+  --border-bottom: 0;
+}
+
+.label {
+  color: #606266;
+}
+
+.form-item {
+  background-color: #f3f4f6;
+}
+
+.form-input {
+  height: 35px;
+}
+
+.form-submit {
+  height: 55px;
+  margin-top: 50px;
+  --text-color: white;
+  --background-color: #818cf8;
+  --border-radius: 1.5rem;
+}
+
+.agreement {
+  color: #909399;
+  left: 0;
+  bottom: env(safe-area-inset-bottom);
+}

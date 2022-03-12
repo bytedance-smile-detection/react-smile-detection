@@ -82,7 +82,7 @@ const Static = () => {
 
         {!imgList.length ? (
           <Image
-            className="fixed bottom-28 right-0 illustration"
+            className="illustration fixed right-0 illustration"
             src={ILLUSTRATION_URL}
           />
         ) : (
@@ -125,7 +125,7 @@ const Static = () => {
                 <span className="flex items-center">
                   <Image
                     className="mr-2"
-                    src={require(`../../assets/smiling.png`)}
+                    src={require(`../../assets/images/smiling.png`)}
                     width={24}
                     height={24}
                   />
@@ -137,7 +137,7 @@ const Static = () => {
                 <span className="flex items-center">
                   <Image
                     className="mr-2"
-                    src={require(`../../assets/notSmiling.png`)}
+                    src={require(`../../assets/images/notSmiling.png`)}
                     width={24}
                     height={24}
                   />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
-import { Image } from "antd-mobile";
+import Judgment from "../Judgment";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
@@ -14,8 +14,11 @@ const Camera = () => {
   const faceRef = useRef(null);
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
+  const threshold = 0.7;
 
   useEffect(() => {
+    let videoTracks = null;
+
     const getUserMedia = async () => {
       await faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL);
       const constraints = {
@@ -25,7 +28,7 @@ const Camera = () => {
 
       try {
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        const videoTracks = stream.getVideoTracks();
+        videoTracks = stream.getVideoTracks();
 
         cameraRef.current.srcObject = stream;
         console.log(`正在使用的设备：${videoTracks[0].label}`);
@@ -40,16 +43,18 @@ const Camera = () => {
 
     return () => {
       clearInterval(timer);
+      videoTracks.forEach((track) => track.stop());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getFace = async () => {
-    await takeSnapshot();
+    const snapshotRef = await takeSnapshot();
     const face = await faceapi.detectSingleFace(
       snapshotRef.current,
       tinyFaceDetector
     );
+
     if (face?.box) {
       const box = {
         top: face.box.top,
@@ -60,8 +65,8 @@ const Camera = () => {
 
       console.log(box);
 
-      await drawFaceCanvas(box);
-      detect();
+      const faceRef = await drawFaceCanvas(snapshotRef, box);
+      detect(snapshotRef, faceRef);
     } else {
       console.log("未检测到人脸!");
       setResult(null);
@@ -81,16 +86,18 @@ const Camera = () => {
         snapshotRef.current.width,
         snapshotRef.current.height
       );
+
+    return snapshotRef.current;
   };
 
-  const drawFaceCanvas = async (box) => {
+  const drawFaceCanvas = async (snapshot, box) => {
     faceRef.current.width = box.right - box.left;
     faceRef.current.height = box.bottom - box.top;
 
     await faceRef.current
       .getContext("2d")
       .drawImage(
-        snapshotRef.current,
+        snapshot.current,
         box.left,
         box.top,
         faceRef.current.width,
@@ -100,11 +107,12 @@ const Camera = () => {
         faceRef.current.width,
         faceRef.current.height
       );
+
+    return faceRef.current;
   };
 
-  const detect = async () => {
-    let element = faceRef.current;
-    let tensor = tf.browser.fromPixels(element);
+  const detect = async (snapshot, face) => {
+    let tensor = tf.browser.fromPixels(face);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
     const batched = resized
@@ -118,6 +126,10 @@ const Camera = () => {
 
     console.log(res);
     setResult(res);
+
+    if (res[1] > threshold) {
+      console.log("检测到人脸!");
+    }
   };
 
   return (
@@ -125,43 +137,19 @@ const Camera = () => {
       <video
         id="camera"
         ref={cameraRef}
-        className="object-cover h-screen"
+        className="object-cover"
         autoPlay
         playsInline
       ></video>
-      {/* <Button onClick={getFace}>截取视频</Button> */}
+
       {result ? (
-        result[1] >= 0.7 ? (
-          <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
-            <Image
-              className="mr-2"
-              src={require(`../../assets/smiling.png`)}
-              width={24}
-              height={24}
-            />
-            Smiling
-          </span>
+        result[1] >= threshold ? (
+          <Judgment icon="smiling" text="Smiling" />
         ) : (
-          <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
-            <Image
-              className="mr-2"
-              src={require(`../../assets/notSmiling.png`)}
-              width={24}
-              height={24}
-            />
-            Not Smiling
-          </span>
+          <Judgment icon="notSmiling" text="Not Smiling" />
         )
       ) : (
-        <span className="flex items-center fixed bottom-24 px-5 py-3 right-1/2 translate-x-1/2 bg-white rounded-3xl font-bold">
-          <Image
-            className="mr-2"
-            src={require(`../../assets/no-face.png`)}
-            width={24}
-            height={24}
-          />
-          No Face Detected
-        </span>
+        <Judgment icon="no-face" text="No Face Detected" />
       )}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>

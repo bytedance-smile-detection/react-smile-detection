@@ -1,0 +1,20 @@
+.bottom-buttons {
+  bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+.bg-color {
+  background-color: #f3f4f6;
+}
+
+.login {
+  height: 55px;
+  --border-radius: 1.5rem;
+  --text-color: white;
+  --background-color: #818cf8;
+}
+
+.sign-up {
+  height: 55px;
+  --border-radius: 1.5rem;
+  --text-color: #303133;
+}

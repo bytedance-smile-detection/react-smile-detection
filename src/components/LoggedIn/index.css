@@ -1,0 +1,21 @@
+.font-main-color {
+  color: #303133;
+}
+
+.font-normal-color {
+  color: #606266;
+}
+
+.font-theme-color {
+  color: #818cf8;
+}
+
+.avatar {
+  padding: 5px;
+  background-color: #f3f4f6;
+}
+
+.setting {
+  padding: 5px;
+  background-color: #f3f4f6;
+}
