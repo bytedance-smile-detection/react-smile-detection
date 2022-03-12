@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
 import Judgment from "../Judgment";
@@ -7,6 +8,7 @@ import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
 
 const Camera = () => {
+  const navigate = useNavigate();
   const model = useContext(ModelContext);
   const [result, setResult] = useState([]);
   const cameraRef = useRef(null);
@@ -50,10 +52,7 @@ const Camera = () => {
 
   const getFace = async () => {
     const snapshotRef = await takeSnapshot();
-    const face = await faceapi.detectSingleFace(
-      snapshotRef.current,
-      tinyFaceDetector
-    );
+    const face = await faceapi.detectSingleFace(snapshotRef, tinyFaceDetector);
 
     if (face?.box) {
       const box = {
@@ -97,7 +96,7 @@ const Camera = () => {
     await faceRef.current
       .getContext("2d")
       .drawImage(
-        snapshot.current,
+        snapshot,
         box.left,
         box.top,
         faceRef.current.width,
@@ -127,9 +126,9 @@ const Camera = () => {
     console.log(res);
     setResult(res);
 
-    if (res[1] > threshold) {
-      console.log("检测到人脸!");
-    }
+    // if (res[1] > threshold) {
+    //   navigate("/photo", { state: { snapshot } });
+    // }
   };
 
   return (

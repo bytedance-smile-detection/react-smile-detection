@@ -1,10 +1,14 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import SvgIcon from "../../components/SvgIcon";
 import "./index.css";
 
 const Photo = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const { snapshot } = state;
+
+  console.log(snapshot);
 
   const goBack = () => {
     navigate("/Dynamic");
