@@ -2,6 +2,7 @@ import React from "react";
 import { Image, Button } from "antd-mobile";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
+import { NOT_LOGGED_IN_SVG } from "../../constants";
 
 const NotLoggedIn = () => {
   const navigate = useNavigate();
@@ -17,10 +18,7 @@ const NotLoggedIn = () => {
   return (
     <>
       <div className="flex flex-col justify-center px-6">
-        <Image
-          className="mt-20"
-          src="https://www.xiaoqw.online/source/smile-detection-nologin.svg"
-        />
+        <Image className="mt-20" src={NOT_LOGGED_IN_SVG} />
 
         <p className="mt-8 text-center text-2xl font-bold">
           Access to personal center

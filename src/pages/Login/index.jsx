@@ -10,7 +10,6 @@ const Login = () => {
 
   const goBack = () => {
     navigate("/user");
-    console.log("goBack");
   };
 
   const submitToLogin = async (params) => {

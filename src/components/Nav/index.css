@@ -1,3 +1,7 @@
+.loading {
+  height: calc(100vh - 4rem - env(safe-area-inset-bottom));
+}
+
 .nav {
   position: fixed;
   bottom: 0;

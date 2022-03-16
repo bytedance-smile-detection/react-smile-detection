@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
+import { Popup, Image, Button } from "antd-mobile";
 import Judgment from "../Judgment";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
 
 const Camera = () => {
-  const navigate = useNavigate();
-  const model = useContext(ModelContext);
+  const lenetModel = useContext(ModelContext);
   const [result, setResult] = useState([]);
+  const [isPopupShow, setIsPopupShow] = useState(false);
+  const [photoSrc, setPhotoSrc] = useState("");
   const cameraRef = useRef(null);
   const snapshotRef = useRef(null);
   const faceRef = useRef(null);
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
-  const threshold = 0.7;
+  const threshold = 0.6;
 
   useEffect(() => {
     let videoTracks = null;
@@ -41,7 +42,7 @@ const Camera = () => {
 
     getUserMedia();
 
-    const timer = setInterval(getFace, 300);
+    const timer = setInterval(takeSnapshot, 300);
 
     return () => {
       clearInterval(timer);
@@ -49,28 +50,6 @@ const Camera = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getFace = async () => {
-    const snapshotRef = await takeSnapshot();
-    const face = await faceapi.detectSingleFace(snapshotRef, tinyFaceDetector);
-
-    if (face?.box) {
-      const box = {
-        top: face.box.top,
-        right: face.box.right,
-        bottom: face.box.bottom,
-        left: face.box.left,
-      };
-
-      console.log(box);
-
-      const faceRef = await drawFaceCanvas(snapshotRef, box);
-      detect(snapshotRef, faceRef);
-    } else {
-      console.log("未检测到人脸!");
-      setResult(null);
-    }
-  };
 
   const takeSnapshot = async () => {
     snapshotRef.current.width = cameraRef.current.videoWidth;
@@ -86,7 +65,25 @@ const Camera = () => {
         snapshotRef.current.height
       );
 
-    return snapshotRef.current;
+    const face = await faceapi.detectSingleFace(
+      snapshotRef.current,
+      tinyFaceDetector
+    );
+
+    if (face?.box) {
+      const { box } = face;
+      const faceRefCurrent = await drawFaceCanvas(snapshotRef.current, box);
+      const isSmiling = await detect(snapshotRef.current, faceRefCurrent);
+
+      if (isSmiling) {
+        setIsPopupShow(true);
+        const photoSrc = snapshotRef.current.toDataURL("image/jpg");
+        setPhotoSrc(photoSrc);
+      }
+    } else {
+      console.log("未检测到人脸!");
+      setResult(null);
+    }
   };
 
   const drawFaceCanvas = async (snapshot, box) => {
@@ -120,16 +117,16 @@ const Camera = () => {
       .reshape([-1, WIDTH, HEIGHT, 1]);
     const normalized = batched.toFloat().div(255.0);
 
-    const prediction = await model.predict(normalized).data();
+    const prediction = await lenetModel.predict(normalized).data();
     const res = Array.from(prediction);
 
     console.log(res);
     setResult(res);
-
-    // if (res[1] > threshold) {
-    //   navigate("/photo", { state: { snapshot } });
-    // }
+    console.log(res[1] > threshold);
+    return res[1] > threshold;
   };
+
+  const savePhoto = () => {};
 
   return (
     <>
@@ -141,17 +138,33 @@ const Camera = () => {
         playsInline
       ></video>
 
-      {result ? (
-        result[1] >= threshold ? (
-          <Judgment icon="smiling" text="Smiling" />
-        ) : (
-          <Judgment icon="notSmiling" text="Not Smiling" />
-        )
+      {result && result[1] <= threshold ? (
+        <Judgment icon="notSmiling" text="Not Smiling" />
       ) : (
         <Judgment icon="no-face" text="No Face Detected" />
       )}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>
+
+      <Popup
+        visible={isPopupShow}
+        onMaskClick={() => {
+          setIsPopupShow(false);
+        }}
+        bodyStyle={{
+          borderTopLeftRadius: "1.5rem",
+          borderTopRightRadius: "1.5rem",
+          padding: "2.25rem",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Image className="rounded-3xl mb-9" src={photoSrc} />
+        <Button className="save font-bold" onClick={savePhoto}>
+          Save
+        </Button>
+      </Popup>
     </>
   );
 };

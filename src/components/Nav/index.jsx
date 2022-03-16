@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { SpinLoading } from "antd-mobile";
 import SvgIcon from "../SvgIcon";
 import * as tf from "@tensorflow/tfjs";
 import "./index.css";
@@ -7,12 +8,12 @@ import { HEIGHT, LENET_MODEL_URL, WIDTH } from "../../constants.js";
 
 export const ModelContext = createContext();
 
-const Nav = (props) => {
+const Nav = () => {
   const [imageIcon, setImageIcon] = useState("image-c");
   const [cameraIcon, setCameraIcon] = useState("camera");
   const [userIcon, setUserIcon] = useState("user");
   const [model, setModel] = useState(null);
-  // const [loadingModel, setLoadingModel] = useState(true);
+  const [loadingModel, setLoadingModel] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,7 +22,7 @@ const Nav = (props) => {
       console.log("loading model ...");
       const model = await tf.loadLayersModel(LENET_MODEL_URL);
       setModel(model);
-      // setLoadingModel(false);
+      setLoadingModel(false);
     };
 
     loadModel();
@@ -64,8 +65,15 @@ const Nav = (props) => {
   return (
     <>
       <ModelContext.Provider value={model}>
-        <Outlet />
+        {loadingModel ? (
+          <div className="loading flex justify-center items-center">
+            <SpinLoading color="#818cf8" />
+          </div>
+        ) : (
+          <Outlet />
+        )}
       </ModelContext.Provider>
+
       <div className="nav fixed w-full flex justify-around bg-gray-100">
         <div className="flex justify-center items-center" onClick={toStatic}>
           <SvgIcon name={imageIcon} width={WIDTH} height={HEIGHT} />

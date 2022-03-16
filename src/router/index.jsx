@@ -4,7 +4,6 @@ import Dynamic from "../pages/Dynamic";
 import User from "../pages/User";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import Photo from "../pages/Photo";
 
 const router = [
   {
@@ -32,10 +31,6 @@ const router = [
   {
     path: "/register",
     element: <Register />,
-  },
-  {
-    path: "/photo",
-    element: <Photo />,
   },
 ];
 

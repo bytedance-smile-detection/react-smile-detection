@@ -2,3 +2,10 @@ video {
   transform: rotateY(180deg);
   height: calc(100vh - 4rem - env(safe-area-inset-bottom));
 }
+
+.save {
+  height: 60px;
+  --border-radius: 1.5rem;
+  --text-color: white;
+  --background-color: #818cf8;
+}

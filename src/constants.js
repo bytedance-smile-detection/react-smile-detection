@@ -1,9 +1,21 @@
 const WIDTH = 28;
 const HEIGHT = 28;
-const ILLUSTRATION_URL =
+
+const BACKEND_URL = "http://112.124.39.72:8000";
+
+const LENET_MODEL_URL = `${BACKEND_URL}/models/lenet/model.json`;
+const FACE_MODEL_URL = `${BACKEND_URL}/models/face/model.json`;
+
+const ILLUSTRATION_SVG =
   "https://www.xiaoqw.online/source/smile-detection-illustration.svg";
+const NOT_LOGGED_IN_SVG =
+  "https://www.xiaoqw.online/source/smile-detection-not-logged-in.svg";
 
-let LENET_MODEL_URL = "http://112.124.39.72:8000/models/lenet/model.json";
-let FACE_MODEL_URL = "http://112.124.39.72:8000/models/face/model.json";
-
-export { LENET_MODEL_URL, FACE_MODEL_URL, WIDTH, HEIGHT, ILLUSTRATION_URL };
+export {
+  WIDTH,
+  HEIGHT,
+  LENET_MODEL_URL,
+  FACE_MODEL_URL,
+  ILLUSTRATION_SVG,
+  NOT_LOGGED_IN_SVG,
+};

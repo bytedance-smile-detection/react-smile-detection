@@ -6,8 +6,12 @@
     "faceapi",
     "LENET",
     "Mobilenetv",
+    "precache",
+    "precached",
+    "precaching",
     "semibold",
     "tfjs",
-    "vladmandic"
+    "vladmandic",
+    "webrtc"
   ]
 }

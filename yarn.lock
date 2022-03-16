@@ -8693,7 +8693,7 @@ webpack@^5.64.4:
 
 webrtc-adapter@^8.1.1:
   version "8.1.1"
-  resolved "https://registry.npmmirror.com/webrtc-adapter/download/webrtc-adapter-8.1.1.tgz"
+  resolved "https://registry.npmmirror.com/webrtc-adapter/-/webrtc-adapter-8.1.1.tgz#e4a4dfd1b5085d119da40c4efc0147f7d0961cba"
   integrity sha512-1yXevP7TeZGmklEXkvQVrZp3fOSJlLeXNGCA7NovQokxgP3/e2T3EVGL0eKU87S9vKppWjvRWqnJeSANEspOBg==
   dependencies:
     sdp "^3.0.2"

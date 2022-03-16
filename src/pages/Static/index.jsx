@@ -1,10 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
-import { ImageUploader, Button, Image } from "antd-mobile";
+import * as faceapi from "@vladmandic/face-api";
+import { ImageUploader, Button, Image, Toast } from "antd-mobile";
 import { UploadOutline } from "antd-mobile-icons";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
-import { WIDTH, HEIGHT, ILLUSTRATION_URL } from "../../constants";
+import {
+  WIDTH,
+  HEIGHT,
+  FACE_MODEL_URL,
+  ILLUSTRATION_SVG,
+} from "../../constants";
 
 const Static = () => {
   const [imgList, setImgList] = useState([]);
@@ -12,12 +18,17 @@ const Static = () => {
   const [isButtonDisplay, setIsButtonDisplay] = useState(false);
   const [isResultDisplay, setIsResultDisplay] = useState(false);
   const [result, setResult] = useState([]);
+  const faceRef = useRef(null);
 
-  const model = useContext(ModelContext);
+  const lenetModel = useContext(ModelContext);
+  const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
 
   useEffect(() => {
-    console.log(model);
-  }, [model]);
+    const loadModel = async () =>
+      await faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL);
+    loadModel();
+    console.log(lenetModel);
+  }, [lenetModel]);
 
   const mockUpload = (img) => {
     const url = URL.createObjectURL(img);
@@ -31,11 +42,49 @@ const Static = () => {
   };
 
   const startDetect = async () => {
-    let img = imgList[0];
-    console.log(img);
+    const img = document.getElementById("img");
+    getFace(img);
+  };
 
-    const element = document.getElementById("img");
-    let tensor = tf.browser.fromPixels(element);
+  const getFace = async (img) => {
+    const face = await faceapi.detectSingleFace(img, tinyFaceDetector);
+    if (!face) {
+      Toast.show({ content: "No faces detected", position: "bottom" });
+      return;
+    }
+
+    if (face?.box) {
+      const { box } = face;
+      console.log(box);
+
+      const faceRef = await drawFaceCanvas(img, box);
+      detect(img, faceRef);
+    }
+  };
+
+  const drawFaceCanvas = async (img, box) => {
+    faceRef.current.width = box.right - box.left;
+    faceRef.current.height = box.bottom - box.top;
+
+    await faceRef.current
+      .getContext("2d")
+      .drawImage(
+        img,
+        box.left,
+        box.top,
+        faceRef.current.width,
+        faceRef.current.height,
+        0,
+        0,
+        faceRef.current.width,
+        faceRef.current.height
+      );
+
+    return faceRef.current;
+  };
+
+  const detect = async (face) => {
+    let tensor = tf.browser.fromPixels(face);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
     const batched = resized
@@ -44,7 +93,7 @@ const Static = () => {
       .reshape([-1, WIDTH, HEIGHT, 1]);
     const normalized = batched.toFloat().div(255.0);
 
-    const prediction = await model.predict(normalized).data();
+    const prediction = await lenetModel.predict(normalized).data();
     const res = Array.from(prediction);
 
     console.log(res);
@@ -83,7 +132,7 @@ const Static = () => {
         {!imgList.length ? (
           <Image
             className="illustration fixed right-0 illustration"
-            src={ILLUSTRATION_URL}
+            src={ILLUSTRATION_SVG}
           />
         ) : (
           <></>
@@ -110,7 +159,10 @@ const Static = () => {
         )}
 
         {url ? (
-          <img id="img" className="w-20 mt-10 hidden" src={url} alt="img" />
+          <>
+            <img id="img" className="w-20 mt-10 hidden" src={url} alt="img" />
+            <canvas ref={faceRef} className="hidden"></canvas>
+          </>
         ) : (
           <></>
         )}
@@ -131,7 +183,7 @@ const Static = () => {
                   />
                   Smiling
                 </span>
-                <span>{`${(result[1] * 100).toFixed(6)}%`}</span>
+                <span>{`${(result[1] * 100).toFixed(4)}%`}</span>
               </div>
               <div className="flex justify-between normal-text-color text-lg">
                 <span className="flex items-center">
@@ -143,7 +195,7 @@ const Static = () => {
                   />
                   Not Smiling
                 </span>
-                <span>{`${(result[0] * 100).toFixed(6)}%`}</span>
+                <span>{`${(result[0] * 100).toFixed(4)}%`}</span>
               </div>
             </div>
             <div className="flex justify-between mt-10 mb-28">
