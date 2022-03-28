@@ -19,3 +19,7 @@
   padding: 5px;
   background-color: #f3f4f6;
 }
+
+.mb-custom {
+  margin-bottom: calc(6rem + env(safe-area-inset-bottom));
+}

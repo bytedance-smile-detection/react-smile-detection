@@ -133,7 +133,7 @@ const Camera = () => {
       <video
         id="camera"
         ref={cameraRef}
-        className="object-cover"
+        // className="object-cover"
         autoPlay
         playsInline
       ></video>
