@@ -133,13 +133,13 @@ const LoggedIn = () => {
       <ul className="setting mt-6 mb-custom rounded-3xl">
         <li className="px-4 py-3">
           <div className="flex justify-between items-center">
-            <span className="text-xl font-bold font-normal-color">About us</span>
+            <span className="text-base font-bold font-main-color">About us</span>
             <SvgIcon name="arrow-right" width={18} height={18} />
           </div>
         </li>
         <li className="px-4 py-3" onClick={handleSignOut}>
           <div className="flex justify-between items-center">
-            <span className="text-xl font-bold font-normal-color">Sign out</span>
+            <span className="text-base font-bold font-main-color">Sign out</span>
             <SvgIcon name="arrow-right" width={18} height={18} />
           </div>
         </li>

@@ -17,7 +17,7 @@ const Camera = () => {
   const faceRef = useRef(null);
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
-  const threshold = 0.6;
+  const threshold = 0.4;
 
   useEffect(() => {
     let videoTracks = null;
@@ -42,7 +42,7 @@ const Camera = () => {
 
     getUserMedia();
 
-    const timer = setInterval(takeSnapshot, 300);
+    const timer = setInterval(takeSnapshot, 1000);
 
     return () => {
       clearInterval(timer);
@@ -55,20 +55,9 @@ const Camera = () => {
     snapshotRef.current.width = cameraRef.current.videoWidth;
     snapshotRef.current.height = cameraRef.current.videoHeight;
 
-    await snapshotRef.current
-      .getContext("2d")
-      .drawImage(
-        cameraRef.current,
-        0,
-        0,
-        snapshotRef.current.width,
-        snapshotRef.current.height
-      );
+    await snapshotRef.current.getContext("2d").drawImage(cameraRef.current, 0, 0, snapshotRef.current.width, snapshotRef.current.height);
 
-    const face = await faceapi.detectSingleFace(
-      snapshotRef.current,
-      tinyFaceDetector
-    );
+    const face = await faceapi.detectSingleFace(snapshotRef.current, tinyFaceDetector);
 
     if (face?.box) {
       const { box } = face;
@@ -90,19 +79,7 @@ const Camera = () => {
     faceRef.current.width = box.right - box.left;
     faceRef.current.height = box.bottom - box.top;
 
-    await faceRef.current
-      .getContext("2d")
-      .drawImage(
-        snapshot,
-        box.left,
-        box.top,
-        faceRef.current.width,
-        faceRef.current.height,
-        0,
-        0,
-        faceRef.current.width,
-        faceRef.current.height
-      );
+    await faceRef.current.getContext("2d").drawImage(snapshot, box.left, box.top, faceRef.current.width, faceRef.current.height, 0, 0, faceRef.current.width, faceRef.current.height);
 
     return faceRef.current;
   };
@@ -111,10 +88,7 @@ const Camera = () => {
     let tensor = tf.browser.fromPixels(face);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
-    const batched = resized
-      .mean(2)
-      .expandDims(0)
-      .reshape([-1, WIDTH, HEIGHT, 1]);
+    const batched = resized.mean(2).expandDims(0).reshape([-1, WIDTH, HEIGHT, 1]);
     const normalized = batched.toFloat().div(255.0);
 
     const prediction = await lenetModel.predict(normalized).data();
@@ -130,19 +104,9 @@ const Camera = () => {
 
   return (
     <>
-      <video
-        id="camera"
-        ref={cameraRef}
-        // className="object-cover"
-        autoPlay
-        playsInline
-      ></video>
+      <video id="camera" ref={cameraRef} className="object-cover" autoPlay playsInline></video>
 
-      {result && result[1] <= threshold ? (
-        <Judgment icon="notSmiling" text="Not Smiling" />
-      ) : (
-        <Judgment icon="no-face" text="No Face Detected" />
-      )}
+      {result && result[1] <= threshold ? <Judgment icon="notSmiling" text="Not Smiling" /> : <Judgment icon="no-face" text="No Face Detected" />}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>
 
