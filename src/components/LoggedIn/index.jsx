@@ -9,23 +9,22 @@ import "./index.css";
 const LoggedIn = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-
+  const [picList, setPicList] = useState([]);
   const [visible, setVisible] = useState(false);
   const [curPic, setCurPic] = useState("");
   const [isShowAll, setIsShowAll] = useState(false);
-  const [buttonText, setButtonText] = useState("All");
   const [albumHeight, setAlbumHeight] = useState("");
   // test images
-  const picList = [
-    { url: "https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80" },
-    { url: "https://images.unsplash.com/photo-1601128533718-374ffcca299b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3128&q=80" },
-    { url: "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
-    { url: "https://images.unsplash.com/photo-1624993590528-4ee743c9896e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
-  ];
+  // const picList = [
+  //   { url: "https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80" },
+  //   { url: "https://images.unsplash.com/photo-1601128533718-374ffcca299b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3128&q=80" },
+  //   { url: "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
+  //   { url: "https://images.unsplash.com/photo-1624993590528-4ee743c9896e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
+  // ];
 
   useEffect(() => {
     setName(localStorage.getItem("name"));
-    // getImages();
+    getImages();
   }, []);
 
   useEffect(() => {
@@ -36,17 +35,17 @@ const LoggedIn = () => {
     }
   }, [picList.length]);
 
-  // const getImages = async () => {
-  //   const token = localStorage.getItem("token");
+  const getImages = async () => {
+    const token = localStorage.getItem("token");
 
-  //   try {
-  //     const res = await Http.getRequest("/users/getImages", {}, token);
-  //     console.log("请求图片成功", res.data);
-  //     setPicList(res.data.images);
-  //   } catch (error) {
-  //     console.log("请求图片出错", error.message);
-  //   }
-  // };
+    try {
+      const res = await Http.getRequest("/users/getImages", {}, token);
+      console.log("请求图片成功", res.data);
+      setPicList(res.data.images);
+    } catch (error) {
+      console.log("请求图片出错", error.message);
+    }
+  };
 
   const changeDisplayState = () => {
     if (picList.length === 0) {
