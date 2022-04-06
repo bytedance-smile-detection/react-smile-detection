@@ -66,8 +66,9 @@ const Nav = () => {
     <>
       <ModelContext.Provider value={model}>
         {loadingModel ? (
-          <div className="loading flex justify-center items-center">
+          <div className="loading flex flex-col justify-center items-center">
             <SpinLoading color="#818cf8" />
+            <p className="my-theme-color mt-4">loading model ...</p>
           </div>
         ) : (
           <Outlet />

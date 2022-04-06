@@ -38,6 +38,7 @@ const Register = () => {
       }
     } catch (error) {
       console.log(error);
+      Toast.show({ content: "Register failed, please try again" });
     }
   };
 
@@ -56,29 +57,15 @@ const Register = () => {
       <Form className="form mt-3" onFinish={submitToRegister}>
         <h2 className="label h-7">Name</h2>
         <Form.Item className="form-item rounded-3xl" name="name">
-          <Input
-            className="form-input"
-            placeholder="Enter your name ..."
-            clearable
-          />
+          <Input className="form-input" placeholder="Enter your name ..." clearable />
         </Form.Item>
         <h2 className="label h-7 mt-5">Password</h2>
         <Form.Item className="form-item rounded-3xl" name="password">
-          <Input
-            className="form-input"
-            placeholder="Enter your password ..."
-            clearable
-            type="password"
-          />
+          <Input className="form-input" placeholder="Enter your password ..." clearable type="password" />
         </Form.Item>
         <h2 className="label h-7 mt-5">Confirm</h2>
         <Form.Item className="form-item rounded-3xl" name="confirmation">
-          <Input
-            className="form-input"
-            placeholder="Confirm your password ..."
-            clearable
-            type="password"
-          />
+          <Input className="form-input" placeholder="Confirm your password ..." clearable type="password" />
         </Form.Item>
 
         <Button className="form-submit font-bold" type="submit" block>
@@ -86,9 +73,7 @@ const Register = () => {
         </Button>
       </Form>
 
-      <p className="agreement fixed pb-3 text-base underline w-full flex justify-center">
-        I agree to terms & conditions
-      </p>
+      <p className="agreement fixed pb-3 text-base underline w-full flex justify-center">I agree to terms & conditions</p>
     </div>
   );
 };

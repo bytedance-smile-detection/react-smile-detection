@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@vladmandic/face-api": "^1.6.6",
     "antd-mobile": "^5.4.0",
+    "atob": "^2.1.2",
     "axios": "^0.26.1",
     "qs": "^6.10.3",
     "react": "^17.0.2",

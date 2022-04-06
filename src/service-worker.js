@@ -11,13 +11,8 @@ import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
-import { NetworkFirst } from "workbox-strategies";
-import {
-  LENET_MODEL_URL,
-  FACE_MODEL_URL,
-  ILLUSTRATION_SVG,
-  NOT_LOGGED_IN_SVG,
-} from "./constants";
+import { NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
+import { LENET_MODEL_URL, FACE_MODEL_URL, ILLUSTRATION_SVG, NOT_LOGGED_IN_SVG } from "./constants";
 
 clientsClaim();
 
@@ -66,19 +61,21 @@ registerRoute(
   })
 );
 
-// // 缓存 png 图片
-// registerRoute(
-//   ({ url }) =>
-//     url.origin === self.location.origin && url.pathname.endsWith(".png"), // Customize this strategy as needed, e.g., by changing to CacheFirst.
-//   new StaleWhileRevalidate({
-//     cacheName: "png-cache",
-//     plugins: [
-//       // Ensure that once this runtime cache reaches a maximum size the
-//       // least-recently used images are removed.
-//       new ExpirationPlugin({ maxEntries: 50 }),
-//     ],
-//   })
-// );
+// 缓存 jpg 图片
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith(".jpg"), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+  new StaleWhileRevalidate({
+    cacheName: "png-cache",
+    plugins: [
+      // Ensure that once this runtime cache reaches a maximum size the
+      // least-recently used images are removed.
+      new ExpirationPlugin({
+        maxEntries: 20,
+        maxAgeSeconds: 60 * 60, // 1 Hour
+      }),
+    ],
+  })
+);
 
 // 缓存 lenet 和 face 模型
 registerRoute(

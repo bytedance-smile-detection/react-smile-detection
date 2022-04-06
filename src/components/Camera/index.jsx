@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
-import { Popup, Image, Button } from "antd-mobile";
+import { Popup, Image, Button, Toast } from "antd-mobile";
 import Judgment from "../Judgment";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
+import { base64toFile } from "../../utils";
+import Http from "../../services";
 
 const Camera = () => {
   const lenetModel = useContext(ModelContext);
@@ -62,7 +64,7 @@ const Camera = () => {
     if (face?.box) {
       const { box } = face;
       const faceRefCurrent = await drawFaceCanvas(snapshotRef.current, box);
-      const isSmiling = await detect(snapshotRef.current, faceRefCurrent);
+      const isSmiling = await detect(faceRefCurrent);
 
       if (isSmiling) {
         setIsPopupShow(true);
@@ -84,7 +86,7 @@ const Camera = () => {
     return faceRef.current;
   };
 
-  const detect = async (snapshot, face) => {
+  const detect = async (face) => {
     let tensor = tf.browser.fromPixels(face);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
@@ -100,7 +102,29 @@ const Camera = () => {
     return res[1] > threshold;
   };
 
-  const savePhoto = () => {};
+  const savePhoto = async () => {
+    const token = localStorage.getItem("token");
+    const file = base64toFile(photoSrc);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await Http.uploadRequest("upload/saveImage", formData, token);
+      console.log(res);
+
+      if (res.code === 201) {
+        setIsPopupShow(false);
+        setPhotoSrc("");
+
+        Toast.show({ content: "Saved successfully" });
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (error) {
+      console.log("图片上传失败", error.message);
+      Toast.show({ content: "Failed to save, please try again" });
+    }
+  };
 
   return (
     <>
