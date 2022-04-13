@@ -1,19 +1,21 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Image, Dialog, ImageViewer, Empty } from "antd-mobile";
+import { Image, ImageViewer, Empty, Popup, Button } from "antd-mobile";
 import SvgIcon from "../SvgIcon";
 import Http from "../../services";
+import { BACKEND_URL } from "../../constants";
 import "./index.css";
 
 const LoggedIn = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [picList, setPicList] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [curPic, setCurPic] = useState("");
   const [isShowAll, setIsShowAll] = useState(false);
   const [albumHeight, setAlbumHeight] = useState("");
+  const [signOutPopupVisible, setSignOutPopupVisible] = useState(false);
   // test images
   // const picList = [
   //   { url: "https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80" },
@@ -63,20 +65,9 @@ const LoggedIn = () => {
   };
 
   const handleSignOut = async () => {
-    const result = await Dialog.confirm({
-      confirmText: <span className="font-bold font-theme-color">Confirm</span>,
-      cancelText: <span className="font-theme-color">Cancel</span>,
-      content: "Are you sure to sign out?",
-      bodyStyle: {
-        borderRadius: "1.5rem",
-      },
-    });
-
-    if (result) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("name");
-      navigate("/");
-    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    navigate("/");
   };
 
   return (
@@ -111,7 +102,7 @@ const LoggedIn = () => {
                   fit="cover"
                   lazy
                   onClick={(event) => {
-                    setVisible(true);
+                    setImageViewerVisible(true);
                     setCurPic(event.target.currentSrc);
                   }}
                 />
@@ -123,9 +114,9 @@ const LoggedIn = () => {
 
       <ImageViewer
         image={curPic}
-        visible={visible}
+        visible={imageViewerVisible}
         onClose={() => {
-          setVisible(false);
+          setImageViewerVisible(false);
         }}
       />
 
@@ -136,13 +127,32 @@ const LoggedIn = () => {
             <SvgIcon name="arrow-right" width={18} height={18} />
           </div>
         </li>
-        <li className="px-4 py-3" onClick={handleSignOut}>
+        <li className="px-4 py-3" onClick={() => setSignOutPopupVisible(true)}>
           <div className="flex justify-between items-center">
             <span className="text-base font-bold font-main-color">Sign out</span>
             <SvgIcon name="arrow-right" width={18} height={18} />
           </div>
         </li>
       </ul>
+
+      <Popup
+        visible={signOutPopupVisible}
+        onMaskClick={() => {
+          setSignOutPopupVisible(false);
+        }}
+        bodyStyle={{
+          borderTopLeftRadius: "1.5rem",
+          borderTopRightRadius: "1.5rem",
+        }}
+      >
+        <div className="flex flex-col items-center">
+          <h1 className="mt-6 text-center text-lg font-bold">Are you sure to sign out?</h1>
+          <Image className="mt-3" src={`${BACKEND_URL}/images/sign-out.svg`} width="50%"></Image>
+          <Button className="confirm-button" onClick={handleSignOut}>
+            Confirm
+          </Button>
+        </div>
+      </Popup>
     </div>
   );
 };

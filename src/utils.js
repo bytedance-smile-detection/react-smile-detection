@@ -1,6 +1,7 @@
 import atob from "atob";
+import Http from "./services";
 
-const base64toFile = (base) => {
+const base64ToFile = (base) => {
   const arr = base.split(",");
   const mime = arr[0].match(/:(.*?);/)[1];
   const suffix = mime.split("/")[1];
@@ -15,4 +16,18 @@ const base64toFile = (base) => {
   return new File([u8arr], `photo.${suffix}`, { type: mime });
 };
 
-export { base64toFile };
+const blobToFile = (blob) => {
+  return new File([blob], "image.jpg", { type: "image/jpeg" });
+};
+
+const uploadImage = async (file) => {
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await Http.uploadRequest("upload/saveImage", formData, token);
+
+  return res;
+};
+
+export { base64ToFile, blobToFile, uploadImage };

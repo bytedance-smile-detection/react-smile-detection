@@ -6,14 +6,13 @@ import Judgment from "../Judgment";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
-import { base64toFile } from "../../utils";
-import Http from "../../services";
+import { base64ToFile, uploadImage } from "../../utils.js";
 
 const Camera = () => {
   const lenetModel = useContext(ModelContext);
   const [result, setResult] = useState([]);
   const [isPopupShow, setIsPopupShow] = useState(false);
-  const [photoSrc, setPhotoSrc] = useState("");
+  const [imageSrc, setimageSrc] = useState("");
   const cameraRef = useRef(null);
   const snapshotRef = useRef(null);
   const faceRef = useRef(null);
@@ -68,8 +67,8 @@ const Camera = () => {
 
       if (isSmiling) {
         setIsPopupShow(true);
-        const photoSrc = snapshotRef.current.toDataURL("image/jpg");
-        setPhotoSrc(photoSrc);
+        const imageSrc = snapshotRef.current.toDataURL("image/jpg");
+        setimageSrc(imageSrc);
       }
     } else {
       console.log("未检测到人脸!");
@@ -102,19 +101,15 @@ const Camera = () => {
     return res[1] > threshold;
   };
 
-  const savePhoto = async () => {
-    const token = localStorage.getItem("token");
-    const file = base64toFile(photoSrc);
-    const formData = new FormData();
-    formData.append("file", file);
-
+  const saveImage = async () => {
     try {
-      const res = await Http.uploadRequest("upload/saveImage", formData, token);
+      const file = base64ToFile(imageSrc);
+      const res = await uploadImage(file);
       console.log(res);
 
       if (res.code === 201) {
         setIsPopupShow(false);
-        setPhotoSrc("");
+        setimageSrc("");
 
         Toast.show({ content: "Saved successfully" });
       } else {
@@ -130,7 +125,7 @@ const Camera = () => {
     <>
       <video id="camera" ref={cameraRef} className="object-cover" autoPlay playsInline></video>
 
-      {result && result[1] <= threshold ? <Judgment icon="notSmiling" text="Not Smiling" /> : <Judgment icon="no-face" text="No Face Detected" />}
+      {result && result[1] <= threshold ? <Judgment icon="not-smiling" text="Not Smiling" /> : <Judgment icon="no-face" text="No Face Detected" />}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>
 
@@ -148,8 +143,8 @@ const Camera = () => {
           justifyContent: "center",
         }}
       >
-        <Image className="rounded-3xl mb-9" src={photoSrc} />
-        <Button className="save font-bold" onClick={savePhoto}>
+        <Image className="rounded-3xl mb-9" src={imageSrc} />
+        <Button className="save font-bold" onClick={saveImage}>
           Save
         </Button>
       </Popup>

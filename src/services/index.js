@@ -1,8 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
-// axios.defaults.baseURL = "http://localhost:8000/api"; // 本地调试
-axios.defaults.baseURL = "https://www.xiaoqw.icu/api"; // 设置全局默认基本信息
+axios.defaults.baseURL = "http://localhost:8000/api"; // 本地调试
+// axios.defaults.baseURL = "https://www.xiaoqw.icu/api"; // 设置全局默认基本信息
 axios.defaults.headers["Content-Type"] = "application/x-www-form-urlencoded"; // 设置默认的请求头的 Content-Type
 
 const getRequest = (url, data, token) => axios.get(url, { params: data, headers: { Authorization: `Bearer ${token}` } });

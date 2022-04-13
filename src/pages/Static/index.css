@@ -12,7 +12,7 @@
 }
 
 .detect-button {
-  width: 200px;
+  width: 70%;
   height: 50px;
   --text-color: #ffffff;
   --background-color: #818CF8;
@@ -20,7 +20,7 @@
 }
 
 .back-button {
-  width: 200px;
+  width: 70%;
   height: 50px;
   margin-top: 1.5rem;
   --text-color: #818CF8;
@@ -37,11 +37,21 @@
   color: #606266;
 }
 
-.clear-button {
-  width: 200px;
+.save-button {
+  width: 70%;
   height: 50px;
   --text-color: #ffffff;
   --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}
+
+.clear-button {
+  width: 70%;
+  height: 50px;
+  margin-top: 1.5rem;
+  --text-color: #818CF8;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
   --border-radius: 1.5rem;
 }
 
