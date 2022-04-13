@@ -12,7 +12,7 @@ import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { registerRoute } from "workbox-routing";
 import { NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
-import { LENET_MODEL_URL, FACE_MODEL_URL, ILLUSTRATION_SVG, NOT_LOGGED_IN_SVG } from "./constants";
+import { LENET_MODEL_URL, FACE_MODEL_URL, NOT_LOGGED_IN_SVG } from "./constants";
 
 clientsClaim();
 
@@ -48,7 +48,7 @@ registerRoute(
 
 // 缓存 svg 图片
 registerRoute(
-  ({ url }) => url.href === ILLUSTRATION_SVG || url.href === NOT_LOGGED_IN_SVG,
+  ({ url }) => url.pathname.endsWith(".svg"),
   new NetworkFirst({
     cacheName: "svg-cache",
     plugins: [
