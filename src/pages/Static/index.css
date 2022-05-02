@@ -19,7 +19,7 @@
   --border-radius: 1.5rem;
 }
 
-.back-button {
+.reselect-button {
   width: 70%;
   height: 50px;
   margin-top: 1.5rem;
@@ -37,23 +37,7 @@
   color: #606266;
 }
 
-.save-button {
-  width: 70%;
-  height: 50px;
-  --text-color: #ffffff;
-  --background-color: #818CF8;
-  --border-radius: 1.5rem;
-}
 
-.clear-button {
-  width: 70%;
-  height: 50px;
-  margin-top: 1.5rem;
-  --text-color: #818CF8;
-  --border-width: 2px;
-  --border-color: #818CF8 !important;
-  --border-radius: 1.5rem;
-}
 
 .illustration {
   bottom: calc(7rem + env(safe-area-inset-bottom));

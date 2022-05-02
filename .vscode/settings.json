@@ -1,17 +1,3 @@
 {
-  "cSpell.words": [
-    "antd",
-    "auths",
-    "deletable",
-    "faceapi",
-    "LENET",
-    "Mobilenetv",
-    "precache",
-    "precached",
-    "precaching",
-    "semibold",
-    "tfjs",
-    "vladmandic",
-    "webrtc"
-  ]
+  "cSpell.words": ["antd", "auths", "deletable", "faceapi", "LENET", "Mobilenetv", "precache", "precached", "precaching", "semibold", "swiper", "tfjs", "vladmandic", "webrtc"]
 }

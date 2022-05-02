@@ -1,0 +1,30 @@
+.result {
+  padding-top: 1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: calc(3.5rem + 50px + env(safe-area-inset-bottom));
+}
+
+.two-button {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom);
+  width: 100%;
+}
+
+.back-button {
+  width: 45%;
+  height: 50px;
+  --text-color: #818CF8;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
+  --border-radius: 1.5rem;
+}
+
+.save-button {
+  width: 45%;
+  height: 50px;
+  --text-color: #ffffff;
+  --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}
+

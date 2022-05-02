@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
 import { ImageUploader, Button, Image, Toast } from "antd-mobile";
@@ -6,16 +7,14 @@ import { UploadOutline } from "antd-mobile-icons";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, BACKEND_URL, FACE_MODEL_URL } from "../../constants";
-import { blobToFile, uploadImage } from "../../utils";
 
 const Static = () => {
   const [imgList, setImgList] = useState([]);
   const [imgBlob, setImgBlob] = useState(null);
   const [url, setUrl] = useState("");
   const [isButtonDisplay, setIsButtonDisplay] = useState(false);
-  const [isResultDisplay, setIsResultDisplay] = useState(false);
-  const [result, setResult] = useState([]);
   const faceRef = useRef(null);
+  const navigate = useNavigate();
 
   const lenetModel = useContext(ModelContext);
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
@@ -56,6 +55,8 @@ const Static = () => {
 
       const faceRef = await drawFaceCanvas(img, box);
       detect(img, faceRef);
+    } else {
+      navigate("/photo", { state: { url, result: null, prePage: "static" } });
     }
   };
 
@@ -79,36 +80,12 @@ const Static = () => {
     const res = Array.from(prediction);
 
     console.log(res);
-    setResult(res);
-    setIsButtonDisplay(false);
-    setIsResultDisplay(true);
+    navigate("/photo", { state: { url, result: res, imgBlob, prePage: "static" } });
   };
 
   const reselect = () => {
     setImgList([]);
     setIsButtonDisplay(false);
-  };
-
-  const saveImage = async () => {
-    try {
-      const file = blobToFile(imgBlob);
-      const res = await uploadImage(file);
-      console.log(res);
-
-      if (res.code === 201) {
-        Toast.show({ content: "Saved successfully" });
-      } else {
-        throw new Error(res.message);
-      }
-    } catch (error) {
-      console.log("图片上传失败", error.message);
-      Toast.show({ content: "Failed to save, please try again" });
-    }
-  };
-
-  const clearResult = () => {
-    setImgList([]);
-    setIsResultDisplay(false);
   };
 
   return (
@@ -128,7 +105,7 @@ const Static = () => {
             <Button className="detect-button font-semibold" onClick={startDetect}>
               Detect
             </Button>
-            <Button className="back-button font-semibold" onClick={reselect} fill="outline">
+            <Button className="reselect-button font-semibold" onClick={reselect} fill="outline">
               Reselect
             </Button>
           </>
@@ -140,40 +117,6 @@ const Static = () => {
           <>
             <img id="img" className="w-20 mt-10 hidden" src={url} alt="img" />
             <canvas ref={faceRef} className="hidden"></canvas>
-          </>
-        ) : (
-          <></>
-        )}
-
-        {isResultDisplay ? (
-          <>
-            <div className="w-full px-6 py-4 rounded-3xl bg-gray-100">
-              {/* <h1 className="text-center mb-4 font-bold main-text-color text-xl">
-                Result
-              </h1> */}
-              <div className="flex justify-between mb-6 normal-text-color text-lg">
-                <span className="flex items-center">
-                  <Image className="mr-2" src={require(`../../assets/images/smiling.png`)} width={24} height={24} />
-                  Smiling
-                </span>
-                <span>{`${(result[1] * 100).toFixed(4)}%`}</span>
-              </div>
-              <div className="flex justify-between normal-text-color text-lg">
-                <span className="flex items-center">
-                  <Image className="mr-2" src={require(`../../assets/images/not-smiling.png`)} width={24} height={24} />
-                  Not Smiling
-                </span>
-                <span>{`${(result[0] * 100).toFixed(4)}%`}</span>
-              </div>
-            </div>
-            <div className="flex flex-col items-center mt-10 mb-28 w-full">
-              <Button className="save-button font-semibold" onClick={saveImage}>
-                Save
-              </Button>
-              <Button className="clear-button font-semibold" onClick={clearResult} fill="outline">
-                Clear
-              </Button>
-            </div>
           </>
         ) : (
           <></>

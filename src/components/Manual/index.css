@@ -1,0 +1,23 @@
+video {
+  transform: rotateY(180deg);
+}
+
+.save {
+  height: 60px;
+  --border-radius: 1.5rem;
+  --text-color: white;
+  --background-color: #818cf8;
+}
+
+.manual-bottom-area {
+  position: fixed;
+  bottom: calc(4rem + env(safe-area-inset-bottom));
+  width: 100%;
+}
+
+.take-photo-button {
+  --background-color: #f3f4f6;
+  --border-width: 0;
+  --border-radius: 50%;
+  padding: 0;
+}

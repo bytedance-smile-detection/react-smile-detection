@@ -9,8 +9,8 @@ import { HEIGHT, LENET_MODEL_URL, WIDTH } from "../../constants.js";
 export const ModelContext = createContext();
 
 const Nav = () => {
-  const [imageIcon, setImageIcon] = useState("image-c");
   const [cameraIcon, setCameraIcon] = useState("camera");
+  const [imageIcon, setImageIcon] = useState("image-c");
   const [userIcon, setUserIcon] = useState("user");
   const [model, setModel] = useState(null);
   const [loadingModel, setLoadingModel] = useState(true);
@@ -30,18 +30,18 @@ const Nav = () => {
 
   useEffect(() => {
     if (location.pathname === "/") {
-      setImageIcon("image-c");
-      setCameraIcon("camera");
+      setCameraIcon("camera-c");
+      setImageIcon("image");
       setUserIcon("user");
     }
-    if (location.pathname === "/dynamic") {
-      setImageIcon("image");
-      setCameraIcon("camera-c");
+    if (location.pathname === "/static") {
+      setCameraIcon("camera");
+      setImageIcon("image-c");
       setUserIcon("user");
     }
     if (location.pathname === "/user") {
-      setImageIcon("image");
       setCameraIcon("camera");
+      setImageIcon("image");
       setUserIcon("user-c");
     }
   }, [location]);
@@ -50,12 +50,12 @@ const Nav = () => {
   //   if (!loadingModel) console.log(false);
   // }, [loadingModel]);
 
-  const toStatic = () => {
+  const toDynamic = () => {
     navigate("/");
   };
 
-  const toDynamic = () => {
-    navigate("/dynamic");
+  const toStatic = () => {
+    navigate("/static");
   };
 
   const toUser = () => {
@@ -76,11 +76,11 @@ const Nav = () => {
       </ModelContext.Provider>
 
       <div className="nav fixed w-full flex justify-around bg-gray-100">
-        <div className="flex justify-center items-center" onClick={toStatic}>
-          <SvgIcon name={imageIcon} width={WIDTH} height={HEIGHT} />
-        </div>
         <div className="flex justify-center items-center" onClick={toDynamic}>
           <SvgIcon name={cameraIcon} width={WIDTH} height={HEIGHT} />
+        </div>
+        <div className="flex justify-center items-center" onClick={toStatic}>
+          <SvgIcon name={imageIcon} width={WIDTH} height={HEIGHT} />
         </div>
         <div className="flex justify-center items-center" onClick={toUser}>
           <SvgIcon name={userIcon} width={WIDTH} height={HEIGHT} />

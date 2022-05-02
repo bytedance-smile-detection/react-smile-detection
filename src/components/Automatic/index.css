@@ -1,0 +1,46 @@
+.automatic-bottom-area {
+  position: fixed;
+  bottom: calc(4rem + env(safe-area-inset-bottom));
+  width: 100%;
+}
+
+.setting-button {
+  --background-color: #f3f4f6;
+  --border-width: 0;
+  --text-color: #818cf8;
+  height: 70px;
+  font-weight: 600;
+}
+
+.radio {
+  color: #303133;
+  --adm-color-primary: #818cf8;
+}
+
+.popup-button {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.popup-confirm-button {
+  height: 50px;
+  --text-color: #ffffff;
+  --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}
+
+.back-button {
+  width: 45%;
+  height: 50px;
+  --text-color: #818CF8;
+  --border-width: 2px;
+  --border-color: #818CF8 !important;
+  --border-radius: 1.5rem;
+}
+
+.save-button {
+  width: 45%;
+  height: 50px;
+  --text-color: #ffffff;
+  --background-color: #818CF8;
+  --border-radius: 1.5rem;
+}

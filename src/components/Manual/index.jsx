@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
-import { Popup, Image, Button, Toast } from "antd-mobile";
-import Judgment from "../Judgment";
+import { Button } from "antd-mobile";
+import SvgIcon from "../SvgIcon";
 import "./index.css";
 import { ModelContext } from "../../components/Nav";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
-import { base64ToFile, uploadImage } from "../../utils.js";
 
 const Camera = () => {
   const lenetModel = useContext(ModelContext);
-  const [result, setResult] = useState([]);
-  const [isPopupShow, setIsPopupShow] = useState(false);
-  const [imageSrc, setimageSrc] = useState("");
   const cameraRef = useRef(null);
   const snapshotRef = useRef(null);
   const faceRef = useRef(null);
+  const navigate = useNavigate();
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
-  const threshold = 0.4;
 
   useEffect(() => {
     let videoTracks = null;
@@ -43,13 +40,9 @@ const Camera = () => {
 
     getUserMedia();
 
-    const timer = setInterval(takeSnapshot, 1000);
-
     return () => {
-      clearInterval(timer);
       videoTracks.forEach((track) => track.stop());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const takeSnapshot = async () => {
@@ -59,20 +52,14 @@ const Camera = () => {
     await snapshotRef.current.getContext("2d").drawImage(cameraRef.current, 0, 0, snapshotRef.current.width, snapshotRef.current.height);
 
     const face = await faceapi.detectSingleFace(snapshotRef.current, tinyFaceDetector);
+    const src = snapshotRef.current.toDataURL("image/jpg");
 
     if (face?.box) {
       const { box } = face;
       const faceRefCurrent = await drawFaceCanvas(snapshotRef.current, box);
-      const isSmiling = await detect(faceRefCurrent);
-
-      if (isSmiling) {
-        setIsPopupShow(true);
-        const imageSrc = snapshotRef.current.toDataURL("image/jpg");
-        setimageSrc(imageSrc);
-      }
+      detect(faceRefCurrent, src);
     } else {
-      console.log("未检测到人脸!");
-      setResult(null);
+      navigate("/photo", { state: { url: src, result: null, prePage: "dynamic" } });
     }
   };
 
@@ -85,7 +72,7 @@ const Camera = () => {
     return faceRef.current;
   };
 
-  const detect = async (face) => {
+  const detect = async (face, src) => {
     let tensor = tf.browser.fromPixels(face);
 
     const resized = tf.image.resizeBilinear(tensor, [WIDTH, HEIGHT]);
@@ -96,58 +83,24 @@ const Camera = () => {
     const res = Array.from(prediction);
 
     console.log(res);
-    setResult(res);
-    console.log(res[1] > threshold);
-    return res[1] > threshold;
+    navigate("/photo", { state: { url: src, result: res, prePage: "dynamic" } });
   };
 
-  const saveImage = async () => {
-    try {
-      const file = base64ToFile(imageSrc);
-      const res = await uploadImage(file);
-      console.log(res);
-
-      if (res.code === 201) {
-        setIsPopupShow(false);
-        setimageSrc("");
-
-        Toast.show({ content: "Saved successfully" });
-      } else {
-        throw new Error(res.message);
-      }
-    } catch (error) {
-      console.log("图片上传失败", error.message);
-      Toast.show({ content: "Failed to save, please try again" });
-    }
+  const takePhoto = () => {
+    takeSnapshot();
   };
 
   return (
     <>
-      <video id="camera" ref={cameraRef} className="object-cover" autoPlay playsInline></video>
+      <video id="camera" ref={cameraRef} className="w-full" autoPlay playsInline></video>
+      <div className="manual-bottom-area flex justify-center py-2 bg-gray-100">
+        <Button className="take-photo-button p-0" onClick={takePhoto}>
+          <SvgIcon name="take-photo-button" width={70} height={70} />
+        </Button>
+      </div>
 
-      {result && result[1] <= threshold ? <Judgment icon="not-smiling" text="Not Smiling" /> : <Judgment icon="no-face" text="No Face Detected" />}
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>
-
-      <Popup
-        visible={isPopupShow}
-        onMaskClick={() => {
-          setIsPopupShow(false);
-        }}
-        bodyStyle={{
-          borderTopLeftRadius: "1.5rem",
-          borderTopRightRadius: "1.5rem",
-          padding: "2.25rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        <Image className="rounded-3xl mb-9" src={imageSrc} />
-        <Button className="save font-bold" onClick={saveImage}>
-          Save
-        </Button>
-      </Popup>
     </>
   );
 };
