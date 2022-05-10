@@ -1,6 +1,6 @@
 .upload {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
 }
 
 .img {
@@ -8,14 +8,14 @@
 }
 
 .illustration {
-  width: 8rem;
+  width: 7rem;
 }
 
 .detect-button {
   width: 70%;
   height: 50px;
   --text-color: #ffffff;
-  --background-color: #818CF8;
+  background-color: #818CF8;
   --border-radius: 1.5rem;
 }
 
@@ -36,8 +36,6 @@
 .normal-text-color {
   color: #606266;
 }
-
-
 
 .illustration {
   bottom: calc(7rem + env(safe-area-inset-bottom));

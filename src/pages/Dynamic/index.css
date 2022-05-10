@@ -1,7 +1,7 @@
 .tabs {
-  --title-font-size: 18px;
+  /* --title-font-size: 18px; */
   --active-line-height: 4px;
-  --content-padding: 6rem 0 0 0;
+  --content-padding: 0;
   color: #303133;
   --adm-color-primary: #818cf8;
   font-weight: 600;

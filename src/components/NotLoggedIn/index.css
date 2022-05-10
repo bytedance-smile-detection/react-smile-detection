@@ -7,14 +7,15 @@
 }
 
 .login {
-  height: 55px;
+  height: 50px;
   --border-radius: 1.5rem;
   --text-color: white;
-  --background-color: #818cf8;
+  background-color: #818cf8;
 }
 
 .sign-up {
-  height: 55px;
+  height: 50px;
   --border-radius: 1.5rem;
   --text-color: #303133;
+  background-color: #ffffff;
 }

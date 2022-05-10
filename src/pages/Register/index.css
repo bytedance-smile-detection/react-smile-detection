@@ -17,14 +17,14 @@
 }
 
 .form-input {
-  height: 35px;
+  height: 30px;
 }
 
 .form-submit {
-  height: 55px;
-  margin-top: 50px;
+  height: 50px;
+  margin-top: 40px;
   --text-color: white;
-  --background-color: #818cf8;
+  background-color: #818cf8;
   --border-radius: 1.5rem;
 }
 

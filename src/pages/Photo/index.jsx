@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Image, Button, Toast } from "antd-mobile";
+import { Image, ImageViewer, Button, Toast } from "antd-mobile";
 import SvgIcon from "../../components/SvgIcon";
 import { base64ToFile, blobToFile, uploadImage } from "../../utils";
 import "./index.css";
 
 const Photo = () => {
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
   const { url, result, prePage } = state;
@@ -21,7 +22,7 @@ const Photo = () => {
 
   if (!result) {
     resultShow = (
-      <div className="flex justify-between normal-text-color text-lg">
+      <div className="flex justify-between normal-text-color font-bold">
         <SvgIcon className="mr-2" name="no-face" width={24} height={24} />
         No faces detected
       </div>
@@ -29,14 +30,14 @@ const Photo = () => {
   } else {
     resultShow = (
       <>
-        <div className="flex justify-between mb-6 normal-text-color text-lg">
+        <div className="flex justify-between mb-6 normal-text-color font-bold">
           <span className="flex items-center">
             <SvgIcon className="mr-2" name="smiling" width={24} height={24} />
             <p className="ml-2">Smiling</p>
           </span>
           <span>{`${(result[1] * 100).toFixed(4)}%`}</span>
         </div>
-        <div className="flex justify-between normal-text-color text-lg">
+        <div className="flex justify-between normal-text-color font-bold">
           <span className="flex items-center">
             <SvgIcon name="not-smiling" width={24} height={24} />
             <p className="ml-2">Not Smiling</p>
@@ -74,7 +75,15 @@ const Photo = () => {
   return (
     <>
       <div className="result">
-        <Image className="w-4/5" src={url} />
+        <Image className="w-full h-3/5" src={url} fit="cover" onClick={() => setVisible(true)} />
+
+        <ImageViewer
+          image={url}
+          visible={visible}
+          onClose={() => {
+            setVisible(false);
+          }}
+        />
         <div className="px-6 py-4 mt-8 rounded-3xl bg-gray-100">{resultShow}</div>
       </div>
 

@@ -5,7 +5,7 @@ import * as faceapi from "@vladmandic/face-api";
 import { Button } from "antd-mobile";
 import SvgIcon from "../SvgIcon";
 import "./index.css";
-import { ModelContext } from "../../components/Nav";
+import { ModelContext } from "../../index";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
 
 const Camera = () => {
@@ -41,7 +41,7 @@ const Camera = () => {
     getUserMedia();
 
     return () => {
-      videoTracks.forEach((track) => track.stop());
+      videoTracks[0].stop();
     };
   }, []);
 

@@ -5,7 +5,7 @@ import * as faceapi from "@vladmandic/face-api";
 import { ImageUploader, Button, Image, Toast } from "antd-mobile";
 import { UploadOutline } from "antd-mobile-icons";
 import "./index.css";
-import { ModelContext } from "../../components/Nav";
+import { ModelContext } from "../../index";
 import { WIDTH, HEIGHT, BACKEND_URL, FACE_MODEL_URL } from "../../constants";
 
 const Static = () => {
@@ -90,8 +90,8 @@ const Static = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl text-gray-800 font-bold">Image Detection</h1>
-      <div className="mt-20 flex flex-col justify-center items-center">
+      <h1 className="text-xl text-gray-800 font-bold">Image Detection</h1>
+      <div className="mt-12 flex flex-col justify-center items-center">
         <ImageUploader className="img mb-8" value={imgList} onChange={setImgList} upload={mockUpload} maxCount={1} deletable={false}>
           <div className="upload flex justify-center items-center text-gray-300 bg-gray-100 rounded-3xl">
             <UploadOutline fontSize={48} />
@@ -115,7 +115,7 @@ const Static = () => {
 
         {url ? (
           <>
-            <img id="img" className="w-20 mt-10 hidden" src={url} alt="img" />
+            <img id="img" className="w-20 hidden" src={url} alt="img" />
             <canvas ref={faceRef} className="hidden"></canvas>
           </>
         ) : (

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Image, ImageViewer, Empty, Popup, Button } from "antd-mobile";
 import SvgIcon from "../SvgIcon";
 import Http from "../../services";
-import { BACKEND_URL } from "../../constants";
+import { BACKEND_URL, AVATAR } from "../../constants";
 import "./index.css";
 
 const LoggedIn = () => {
@@ -16,13 +16,6 @@ const LoggedIn = () => {
   const [isShowAll, setIsShowAll] = useState(false);
   const [albumHeight, setAlbumHeight] = useState("");
   const [signOutPopupVisible, setSignOutPopupVisible] = useState(false);
-  // test images
-  // const picList = [
-  //   { url: "https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80" },
-  //   { url: "https://images.unsplash.com/photo-1601128533718-374ffcca299b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3128&q=80" },
-  //   { url: "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
-  //   { url: "https://images.unsplash.com/photo-1624993590528-4ee743c9896e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=3113&q=80" },
-  // ];
 
   useEffect(() => {
     setName(localStorage.getItem("name"));
@@ -72,9 +65,9 @@ const LoggedIn = () => {
 
   return (
     <div className="px-6">
-      <div className="flex flex-col justify-between items-center mt-5">
+      <div className="flex justify-between items-center mt-5">
         <span className="avatar flex justify-center items-center rounded-full">
-          <Image className="rounded-full" src="https://joeschmoe.io/api/v1/random" width={100} height={100} />
+          <Image className="rounded-full" src={AVATAR} width={60} height={60} />
         </span>
         <h1 className="mt-4 text-2xl font-bold font-main-color">{name}</h1>
       </div>
@@ -148,7 +141,7 @@ const LoggedIn = () => {
         <div className="flex flex-col items-center">
           <h1 className="mt-6 text-center text-lg font-bold">Are you sure to sign out?</h1>
           <Image className="mt-3" src={`${BACKEND_URL}/images/sign-out.svg`} width="50%"></Image>
-          <Button className="confirm-button" onClick={handleSignOut}>
+          <Button className="confirm-button font-semibold" onClick={handleSignOut}>
             Confirm
           </Button>
         </div>

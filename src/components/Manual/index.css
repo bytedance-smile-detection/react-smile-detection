@@ -6,7 +6,7 @@ video {
   height: 60px;
   --border-radius: 1.5rem;
   --text-color: white;
-  --background-color: #818cf8;
+  background-color: #818cf8;
 }
 
 .manual-bottom-area {

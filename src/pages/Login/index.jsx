@@ -45,18 +45,18 @@ const Login = () => {
         <SvgIcon name="arrow-left" width={32} height={32} />
       </div>
 
-      <h1 className="title text-3xl text-right font-bold py-4">
+      <h1 className="title text-xl text-right font-bold py-2">
         Welcome
         <br />
         Sign in to continue
       </h1>
 
-      <Form className="form mt-3" onFinish={submitToLogin}>
+      <Form className="form mt-2" onFinish={submitToLogin}>
         <h2 className="label h-7">Name</h2>
         <Form.Item className="form-item rounded-3xl" name="name">
           <Input className="form-input" placeholder="Enter your name ..." clearable />
         </Form.Item>
-        <h2 className="label h-7 mt-5">Password</h2>
+        <h2 className="label h-7 mt-4">Password</h2>
         <Form.Item className="form-item rounded-3xl" name="password">
           <Input className="form-input" placeholder="Enter your password ..." clearable type="password" />
         </Form.Item>
@@ -66,7 +66,7 @@ const Login = () => {
         </Button>
       </Form>
 
-      <p className="agreement fixed pb-3 text-base underline w-full flex justify-center">I agree to terms & conditions</p>
+      <p className="agreement fixed pb-4 text-base underline w-full flex justify-center">I agree to terms & conditions</p>
     </div>
   );
 };

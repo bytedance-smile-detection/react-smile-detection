@@ -4,7 +4,7 @@ import * as faceapi from "@vladmandic/face-api";
 import { Radio, Space, Popup, Image, Button, Toast } from "antd-mobile";
 import SvgIcon from "../../components/SvgIcon";
 import Judgment from "../Judgment";
-import { ModelContext } from "../../components/Nav";
+import { ModelContext } from "../../index";
 import "./index.css";
 import { WIDTH, HEIGHT, FACE_MODEL_URL } from "../../constants";
 import { base64ToFile, uploadImage } from "../../utils";
@@ -52,7 +52,7 @@ const Automatic = () => {
     return () => {
       clearInterval(timer);
       timer = null;
-      videoTracks.forEach((track) => track.stop());
+      videoTracks[0].stop();
     };
   }, []);
 
@@ -143,10 +143,10 @@ const Automatic = () => {
     <>
       <video id="camera" ref={cameraRef} className="w-full" autoPlay playsInline></video>
       <div className="automatic-bottom-area flex justify-around py-2 bg-gray-100">
-        <Button className="setting-button text-lg font-semibold" onClick={() => setIsSpeedPopupShow(true)}>
+        <Button className="setting-button font-semibold" onClick={() => setIsSpeedPopupShow(true)}>
           {speed === 1000 ? "Speed: Slow" : speed === 700 ? "Speed: Medium" : "Speed: Fast"}
         </Button>
-        <Button className="setting-button text-lg font-semibold" onClick={() => setIsThresHoldPopupShow(true)}>
+        <Button className="setting-button font-semibold" onClick={() => setIsThresHoldPopupShow(true)}>
           {threshold === 0.3 ? "Threshold: Slow" : threshold === 0.5 ? "Threshold: Medium" : "Threshold: High"}
         </Button>
       </div>

@@ -17,10 +17,10 @@ const NotLoggedIn = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center px-6">
-        <Image className="mt-20" src={`${BACKEND_URL}/images/not-logged-in.svg`} />
+      <div className="flex flex-col items-center px-6">
+        <Image className="mt-6" src={`${BACKEND_URL}/images/not-logged-in.svg`} />
 
-        <p className="mt-8 text-center text-2xl font-bold">
+        <p className="mt-8 text-center text-xl font-bold">
           Access to personal center
           <br />
           to enjoy more features
@@ -28,12 +28,12 @@ const NotLoggedIn = () => {
       </div>
 
       <div className="fixed bottom-buttons w-full">
-        <div className="p-6">
+        <div className="p-5">
           <Button className="font-bold login" onClick={toLogin} block>
             Login
           </Button>
         </div>
-        <div className="p-6 bg-color">
+        <div className="p-5 bg-color">
           <Button className="font-bold sign-up" onClick={toRegister} block>
             Sign up
           </Button>

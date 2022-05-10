@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 if (process.env.NODE_ENV === "development") {
-  axios.defaults.baseURL = "http://localhost:8000/api"; // 本地调试
+  axios.defaults.baseURL = "http://192.168.1.102:8000/api"; // 本地调试
 } else {
   axios.defaults.baseURL = "https://www.xiaoqw.icu/api"; // 设置全局默认基本信息
 }
