@@ -29,7 +29,6 @@ const Automatic = () => {
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
   let timer = null;
-  // let judgment = <Judgment icon="no-face" text="No Face Detected" />;
 
   useEffect(() => {
     let videoTracks = null;
@@ -90,7 +89,7 @@ const Automatic = () => {
         timer = null;
         setIsPopupShow(true);
       } else {
-        setJudgmentIcon("no-smiling");
+        setJudgmentIcon("not-smiling");
         setJudgmentText("Face Detected");
       }
     } else {
@@ -245,9 +244,7 @@ const Automatic = () => {
 
       <Popup
         visible={isPopupShow}
-        onMaskClick={() => {
-          setIsPopupShow(false);
-        }}
+        onMaskClick={closePopup}
         bodyStyle={{
           borderTopLeftRadius: "1.5rem",
           borderTopRightRadius: "1.5rem",
@@ -259,13 +256,13 @@ const Automatic = () => {
       >
         <Image className="h-60 rounded-3xl" src={imageSrc} onClick={() => setImageViewerVisible(true)} />
 
-        <ImageViewer
+        {/* <ImageViewer
           image={imageSrc}
           visible={imageViewerVisible}
           onClose={() => {
             setImageViewerVisible(false);
           }}
-        />
+        /> */}
 
         <div className="px-6 py-4 mt-8 rounded-3xl bg-gray-100">
           <div className="flex justify-between mb-6 normal-text-color font-bold">

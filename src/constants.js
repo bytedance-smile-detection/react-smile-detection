@@ -4,7 +4,7 @@ const HEIGHT = 28;
 let BACKEND_URL;
 
 if (process.env.NODE_ENV === "development") {
-  BACKEND_URL = "http://192.168.1.102:8000"; // development env
+  BACKEND_URL = "http://localhost:8000"; // development env
 } else {
   BACKEND_URL = "https://www.xiaoqw.icu"; // production env
 }
