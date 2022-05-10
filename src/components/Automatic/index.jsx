@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as faceapi from "@vladmandic/face-api";
-import { Radio, Space, Popup, Image, Button, Toast } from "antd-mobile";
+import { Radio, Space, Popup, Image, ImageViewer, Button, Toast } from "antd-mobile";
 import SvgIcon from "../../components/SvgIcon";
 import Judgment from "../Judgment";
 import { ModelContext } from "../../index";
@@ -17,14 +17,19 @@ const Automatic = () => {
   const [isSpeedPopupShow, setIsSpeedPopupShow] = useState(false);
   const [isThresHoldPopupShow, setIsThresHoldPopupShow] = useState(false);
   const [isPopupShow, setIsPopupShow] = useState(false);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [imageSrc, setimageSrc] = useState("");
+
+  const [judgmentIcon, setJudgmentIcon] = useState("no-face");
+  const [judgmentText, setJudgmentText] = useState("No Face Detected");
+
   const cameraRef = useRef(null);
   const snapshotRef = useRef(null);
   const faceRef = useRef(null);
 
   const tinyFaceDetector = new faceapi.TinyFaceDetectorOptions();
   let timer = null;
-  let judgment = <Judgment icon="no-face" text="No Face Detected" />;
+  // let judgment = <Judgment icon="no-face" text="No Face Detected" />;
 
   useEffect(() => {
     let videoTracks = null;
@@ -85,10 +90,12 @@ const Automatic = () => {
         timer = null;
         setIsPopupShow(true);
       } else {
-        judgment = <Judgment icon="not-smiling" text="Not Smiling" />;
+        setJudgmentIcon("no-smiling");
+        setJudgmentText("Face Detected");
       }
     } else {
-      judgment = <Judgment icon="no-face" text="No Face Detected" />;
+      setJudgmentIcon("no-face");
+      setJudgmentText("No Face Detected");
     }
   };
 
@@ -151,7 +158,8 @@ const Automatic = () => {
         </Button>
       </div>
 
-      {judgment}
+      <Judgment icon={judgmentIcon} text={judgmentText} />
+
       <canvas ref={snapshotRef} className="w-full hidden"></canvas>
       <canvas ref={faceRef} className="w-full hidden"></canvas>
 
@@ -249,21 +257,31 @@ const Automatic = () => {
           justifyContent: "center",
         }}
       >
-        <Image className="rounded-3xl mb-6" src={imageSrc} />
+        <Image className="h-60 rounded-3xl" src={imageSrc} onClick={() => setImageViewerVisible(true)} />
 
-        <div className="flex justify-between mb-6 normal-text-color text-lg">
-          <span className="flex items-center">
-            <SvgIcon className="mr-2" name="smiling" width={24} height={24} />
-            <p className="ml-2">Smiling</p>
-          </span>
-          <span>{`${(result[1] * 100).toFixed(4)}%`}</span>
-        </div>
-        <div className="flex justify-between normal-text-color text-lg">
-          <span className="flex items-center">
-            <SvgIcon name="not-smiling" width={24} height={24} />
-            <p className="ml-2">Not Smiling</p>
-          </span>
-          <span>{`${(result[0] * 100).toFixed(4)}%`}</span>
+        <ImageViewer
+          image={imageSrc}
+          visible={imageViewerVisible}
+          onClose={() => {
+            setImageViewerVisible(false);
+          }}
+        />
+
+        <div className="px-6 py-4 mt-8 rounded-3xl bg-gray-100">
+          <div className="flex justify-between mb-6 normal-text-color font-bold">
+            <span className="flex items-center">
+              <SvgIcon className="mr-2" name="smiling" width={24} height={24} />
+              <p className="ml-2">Smiling</p>
+            </span>
+            <span>{`${(result[1] * 100).toFixed(4)}%`}</span>
+          </div>
+          <div className="flex justify-between normal-text-color font-bold">
+            <span className="flex items-center">
+              <SvgIcon name="not-smiling" width={24} height={24} />
+              <p className="ml-2">Not Smiling</p>
+            </span>
+            <span>{`${(result[0] * 100).toFixed(4)}%`}</span>
+          </div>
         </div>
 
         <div className="popup-button">

@@ -75,7 +75,7 @@ const Photo = () => {
   return (
     <>
       <div className="result">
-        <Image className="w-full h-3/5" src={url} fit="cover" onClick={() => setVisible(true)} />
+        <Image className="w-full h-60" src={url} fit="cover" onClick={() => setVisible(true)} />
 
         <ImageViewer
           image={url}
