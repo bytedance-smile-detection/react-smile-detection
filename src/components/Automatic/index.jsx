@@ -254,7 +254,7 @@ const Automatic = () => {
           justifyContent: "center",
         }}
       >
-        <Image className="h-60 rounded-3xl" src={imageSrc} onClick={() => setImageViewerVisible(true)} />
+        <Image className="h-60 rounded-3xl" src={imageSrc} fit="cover" onClick={() => setImageViewerVisible(true)} />
 
         {/* <ImageViewer
           image={imageSrc}
