@@ -6,7 +6,7 @@ let BACKEND_URL;
 if (process.env.NODE_ENV === "development") {
   BACKEND_URL = "http://localhost:8000"; // development env
 } else {
-  BACKEND_URL = "https://www.xiaoqw.icu"; // production env
+  BACKEND_URL = "https://www.xiaoqw.online"; // production env
 }
 
 const LENET_MODEL_URL = `${BACKEND_URL}/models/lenet/model.json`;
